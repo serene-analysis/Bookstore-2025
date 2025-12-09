@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <array>
 #include <fstream>
@@ -32,15 +33,15 @@ std::cout << std::endl;
     return now.first == oth.first;
 }*/
 
-fstream file;
-std::pair<std::array<char,64>,unsigned int> pool[505];
 template<class T, int info_len, int block = 500>
 class MemoryRiver {
 private:
     /* your code here */
+    fstream file;
     std::string file_name;
     int sizeofT = sizeof(T);
     int sizeofRiver = sizeof(int)*info_len + sizeofT * block;
+    T pool[505];
 
 public:
 
@@ -259,28 +260,28 @@ public:
     BlockList(const std::string file_name) : file_name(file_name) {}
 
     ~BlockList(){
-        file.seekp(0, ios::beg);
-        file.write(reinterpret_cast<char*>(&size), sizeof(int));
-        file.write(reinterpret_cast<char*>(&head), sizeof(int));
-        file.write(reinterpret_cast<char*>(&number), sizeof(int));
-        file.close();
+        list.file.seekp(0, ios::beg);
+        list.file.write(reinterpret_cast<char*>(&size), sizeof(int));
+        list.file.write(reinterpret_cast<char*>(&head), sizeof(int));
+        list.file.write(reinterpret_cast<char*>(&number), sizeof(int));
+        list.file.close();
         return;
     }
 
     void initialise(std::string FN = "") {
         file_name = FN;
-        file.open(file_name, ios::in | ios::out | ios::binary);
-        if(!file.is_open()){
-            file.open(file_name, ios::out | ios::binary);
-            file.close();
-            file.open(file_name, ios::in | ios::out | ios::binary);
+        list.file.open(file_name, ios::in | ios::out | ios::binary);
+        if(!list.file.is_open()){
+            list.file.open(file_name, ios::out | ios::binary);
+            list.file.close();
+            list.file.open(file_name, ios::in | ios::out | ios::binary);
             size = 1;
             list.initialise(file_name, head);
         }
         else{
-            file.read(reinterpret_cast<char*>(&size), sizeof(int));
-            file.read(reinterpret_cast<char*>(&head), sizeof(int));
-            file.read(reinterpret_cast<char*>(&number), sizeof(int));
+            list.file.read(reinterpret_cast<char*>(&size), sizeof(int));
+            list.file.read(reinterpret_cast<char*>(&head), sizeof(int));
+            list.file.read(reinterpret_cast<char*>(&number), sizeof(int));
         }
         //std::cout << "sizeofT = " << sizeof(T) << std::endl;
         return;
@@ -429,68 +430,3 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
         return;
     }
 };
-BlockList<std::pair<std::array<char,64>, unsigned int>, 2, 500>sqrtList;
-int n;
-std::array<char,64> idx;
-unsigned int value;
-signed main(){
-    std::ios::sync_with_stdio(false);
-    //freopen("test.in","r",stdin);
-    //freopen("mine.out","w",stdout);
-    //std::cout << "???" << std::endl;
-    sqrtList.initialise("test.out");
-    std::cin >> n;
-    for(int i=1;i<=n;i++){
-#ifdef DEBUG
-std::cout << "i = " << i << std::endl;
-#endif
-        std::string nop, nidx;
-        std::cin >> nop >> nidx;
-        int len = nidx.length();
-        idx = std::array<char,64>();
-        for(int j=0;j<len;j++){
-            idx[j] = nidx[j];
-        }
-        auto now = std::make_pair(idx, 0u);
-        if(nop == "find"){
-            sqrtList.find(now);
-        }
-        else{
-            std::cin >> value;
-#ifdef DEBUG
-std::cout << "insert or delete, value = " << value << std::endl;
-#endif
-            now = std::make_pair(idx, value);
-            if(nop == "insert"){
-                sqrtList.insert(now);
-            }
-            else{
-                sqrtList.remove(now);
-            }
-        }
-    }
-    return 0;
-}
-/*
-20
-insert a 1
-insert b 1
-insert c 1
-insert d 1
-insert e 1
-insert f 1
-insert g 1
-insert h 1
-delete h 1
-delete g 1
-delete f 1
-delete e 1
-delete b 1
-delete a 1
-insert c 2
-insert b 3
-find a
-find b
-find c
-find d
-*/
