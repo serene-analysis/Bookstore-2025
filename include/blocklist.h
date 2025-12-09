@@ -33,7 +33,7 @@ std::cout << std::endl;
     return now.first == oth.first;
 }*/
 
-template<class T, int info_len, int block = 500>
+template<class T, int info_len = 2, int block = 500>
 class MemoryRiver {
 private:
     /* your code here */
@@ -246,7 +246,7 @@ std::cout << "delta = " << delta << ", remove!" << std::endl;
 };
 
 
-template<class T, int info_len, int block = 500> // require T ==/<=/>=/</>/!= T
+template<class T, int info_len = 2, int block = 500> // require T ==/<=/>=/</>/!= T
 class BlockList {
 private:
     std::string file_name;
