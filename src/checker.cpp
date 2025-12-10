@@ -263,8 +263,11 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             return book.show(turn(), turn(), turn(), turn(), account);
         }
         if(info[1] == "finance"){
-            if(size != 3){
+            if(size >= 4){
                 return false;
+            }
+            if(size == 2){
+                return log.show(-1);
             }
             if(!valid(info[2], Count))return false;
             return log.show(std::stoi(info[2]));

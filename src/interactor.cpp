@@ -30,7 +30,9 @@ std::vector<std::string> Interactor::readLine(){
 
 void Interactor::tian(AccountSystem &account, BookSystem &book, LogSystem &log, Checker &checker){
     std::cout << std::fixed << std::setprecision(2);
-    assert(account.signup(turn("root"), turn("sjtu"), turn("root"), true));
+    if(account.account_.number == 0){
+        assert(account.signup(turn("root"), turn("sjtu"), turn("root"), true));
+    }
     while(!end_){
         auto got = readLine();
         if(end_){
