@@ -4,10 +4,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
-using Tselected = std::pair<std::array<char,61>, std::tuple<std::array<char,61>, std::array<char,61>, std::array<char,61>, std::array<char,61>, double, long long > >;
-using Taccount = std::pair<std::array<char,61>,std::tuple<std::array<char,61>, int, std::array<char,61>, Tselected > >;
+using String = std::array<char,61>;
+using Tselected = std::pair<String, std::tuple<String, String, String, String, double, long long > >;
+using Taccount = std::pair<String,std::tuple<String, int, String, Tselected > >;
 using Tstackaccount = std::pair<int, Taccount>;
-using Tmap = std::pair<std::array<char,61>, int>;
+using Tmap = std::pair<String, int>;
 
 struct AccountSystem{
     BlockList<Taccount> account_;
@@ -21,11 +22,15 @@ struct AccountSystem{
     }
     ~AccountSystem() = default;
     Taccount currentAccount();
+    int currentPrivilege();
+    Tselected currentBook();
     bool exit();
-    bool su(std::array<char,61>, std::array<char,61>);
+    bool su(String, String);
     bool logout();
-    bool signup(std::array<char,61>, std::array<char,61>, std::array<char,61>, bool);
-    bool passwd(std::array<char,61>, std::array<char,61>, std::array<char,61>);
-    bool useradd(std::array<char,61>, std::array<char,61>, int, std::array<char,61>);
-    bool remove(std::array<char,61>);
+    bool signup(String, String, String, bool);
+    bool passwd(String, String, String);
+    bool useradd(String, String, int, String);
+    bool remove(String);
+    bool select(Tselected);
+    bool changeBook(Tselected, Tselected);
 };

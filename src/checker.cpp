@@ -4,9 +4,9 @@
 #include <iomanip>
 #include <map>
 
-std::array<char,61> turn(std::string str = ""){
+String turn(std::string str = ""){
     int len = str.length();
-    std::array<char,61> ret = std::array<char,61>();
+    String ret = String();
     for(int i=0;i<len;i++){
         ret[i] = str[i];
     }
@@ -260,7 +260,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
     }
     if(fir == "show"){
         if(size == 1){
-            return book.show(turn(), turn(), turn(), turn());
+            return book.show(turn(), turn(), turn(), turn(), account);
         }
         if(info[1] == "finance"){
             if(size != 3){
@@ -275,17 +275,17 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             }
             bool can[4] = {pre_suf_valid(info[1], ISBN), pre_suf_valid(info[1], BookName), pre_suf_valid(info[1], Author), pre_suf_valid(info[1], Keyword)};
             if(can[0]){
-                return book.show(turn(remove_pre_suf(info[1], ISBN)), turn(), turn(), turn());
+                return book.show(turn(remove_pre_suf(info[1], ISBN)), turn(), turn(), turn(), account);
             }
             if(can[1]){
-                return book.show(turn(), turn(remove_pre_suf(info[1], BookName)), turn(), turn());
+                return book.show(turn(), turn(remove_pre_suf(info[1], BookName)), turn(), turn(), account);
             }
             if(can[2]){
-                return book.show(turn(), turn(), turn(remove_pre_suf(info[1], Author)), turn());
+                return book.show(turn(), turn(), turn(remove_pre_suf(info[1], Author)), turn(), account);
             }
             if(can[3]){
                 if(!single_keyword(info[1]))return false;
-                return book.show(turn(), turn(), turn(), turn(remove_pre_suf(info[1], Keyword)));
+                return book.show(turn(), turn(), turn(), turn(remove_pre_suf(info[1], Keyword)), account);
             }
             return false;
         }
@@ -295,7 +295,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             return false;
         }
         if(!valid(info[1], ISBN) || !valid(info[2], Quantity))return false;
-        return book.buy(turn(info[1]), std::stoll(info[2]), account);
+        return book.buy(turn(info[1]), std::stoll(info[2]), account, log);
     }
     if(fir == "select"){
         if(size != 2){
@@ -345,14 +345,14 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 price = remove_pre_suf(info[wc], Price), gprice = true;
             }
         }
-        return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), std::stod(price), account);
+        return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), gprice ? std::stod(price) : -1, account);
     }
     if(fir == "import"){
         if(size != 3){
             return false;
         }
         if(!valid(info[1], Quantity) || !valid(info[2], TotalCost))return false;
-        return book.import(std::stoll(info[1]), std::stod(info[2]), account);
+        return book.import(std::stoll(info[1]), std::stod(info[2]), account, log);
     }
     throw "error";
     return false;

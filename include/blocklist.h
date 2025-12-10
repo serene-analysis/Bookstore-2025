@@ -242,6 +242,22 @@ std::cout << "delta = " << delta << ", remove!" << std::endl;
         }
         return have;
     }
+
+    
+    T find(T &value, int delta) {
+        bool have = false;
+        int nsize = get_info(Ksize, delta);
+        /* your code here */
+        file.seekg(delta + sizeof(int)*info_len, ios::beg);
+        T nv, ret = T();
+        for(int i=1;i<=nsize;i++){
+            file.read(reinterpret_cast<char*>(&nv), sizeofT);
+            if(value == nv){
+                ret = nv;
+            }
+        }
+        return ret;
+    }
     
     T findSimilar(T &value, int delta) {
         bool have = false;
@@ -258,21 +274,32 @@ std::cout << "delta = " << delta << ", remove!" << std::endl;
         return ret;
     }
 
-    void modify(T &given, T &arr, int delta) {
-        bool have = false;
+    std::vector<T> allSimilar(T &value, int delta) {
         int nsize = get_info(Ksize, delta);
         /* your code here */
         file.seekg(delta + sizeof(int)*info_len, ios::beg);
         T nv;
+        std::vector<T> ret;
         for(int i=1;i<=nsize;i++){
             file.read(reinterpret_cast<char*>(&nv), sizeofT);
-            if(given == nv){
-                file.seekp(-sizeofT, ios::cur);
-                file.write(reinterpret_cast<char*>(&arr), sizeofT);
-                return;
+            if(similar(value, nv)){
+                ret.push_back(nv);
             }
         }
-        return;
+        return ret;
+    }
+
+    std::vector<T> all(int delta) {
+        int nsize = get_info(Ksize, delta);
+        /* your code here */
+        file.seekg(delta + sizeof(int)*info_len, ios::beg);
+        T nv;
+        std::vector<T> ret;
+        for(int i=1;i<=nsize;i++){
+            file.read(reinterpret_cast<char*>(&nv), sizeofT);
+            ret.push_back(nv);
+        }
+        return ret;
     }
 };
 
@@ -427,47 +454,6 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
         }
         return;
     }
-
-    void find(T &value) {
-        bool have = false;
-        int now = head;
-        while(true){
-            if(list.empty(now)){
-                now = list.get_info(Knext, now);
-                if(!now){
-                    if(!have){
-                        std::cout << "null";
-                    }
-                    std::cout << std::endl;
-                    return;
-                }
-                continue;
-            }
-            /*similar(list.read(1, now), value);
-            similar(list.read(block, now), value);*/
-            if(list.read(block, now).first >= value.first && list.read(1, now).first <= value.first){
-                have |= list.overall(value, now);
-            }
-            else{
-                if(list.read(1, now).first > value.first){
-                    if(!have){
-                        std::cout << "null";
-                    }
-                    std::cout << std::endl;
-                    return;
-                }
-            }
-            now = list.get_info(Knext, now);
-            if(!now){
-                if(!have){
-                    std::cout << "null";
-                }
-                std::cout << std::endl;
-                return;
-            }
-        }
-        return;
-    }
     
     void pop_back(){
         int now = head, left = number;
@@ -553,30 +539,71 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
         return T();
     }
 
-    void modify(T &given, T &arr){
+    std::vector<T> allSimilar(T &value){
         int now = head;
+        std::vector<int> got;
+        std::vector<T> ret;
         while(true){
             if(list.empty(now)){
                 now = list.get_info(Knext, now);
                 if(!now){
-                    return;
+                    break;
                 }
                 continue;
             }
-            if(list.read(block, now).first >= given.first && list.read(1, now).first <= given.first){
-                list.modify(given, arr, now);
-                return;
+            if(list.read(block, now).first >= value.first && list.read(1, now).first <= value.first){
+                got.push_back(now);
             }
             else{
-                if(list.read(1, now).first > given.first){
-                    return;
+                if(list.read(1, now).first > value.first){
+                    break;
                 }
             }
             now = list.get_info(Knext, now);
             if(!now){
-                return;
+                break;
             }
         }
+        for(int nv : got){
+            std::vector<T> ngot = list.allSimilar(value, nv);
+            for(T gv : ngot){
+                ret.push_back(gv);
+            }
+        }
+        return ret;
+    }
+
+    std::vector<T> all(){
+        int now = head;
+        std::vector<int> got;
+        std::vector<T> ret;
+        while(true){
+            if(list.empty(now)){
+                now = list.get_info(Knext, now);
+                if(!now){
+                    break;
+                }
+                continue;
+            }
+            got.push_back(now);
+            now = list.get_info(Knext, now);
+            if(!now){
+                break;
+            }
+        }
+        for(int nv : got){
+            std::vector<T> ngot = list.all(nv);
+            for(T gv : ngot){
+                ret.push_back(gv);
+            }
+        }
+        return ret;
+    }
+
+    void modify(T &given, T &arr){
+        remove(given);
+        insert(arr);
+        return;
     }
 
     void renew(T &value){

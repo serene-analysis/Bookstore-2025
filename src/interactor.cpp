@@ -1,11 +1,16 @@
 #include "interactor.h"
 #include "checker.h"
 #include <cassert>
+#include <iomanip>
 std::vector<std::string> Interactor::readLine(){
     std::vector<std::string> ret;
     std::string got;
     char ch = getchar();
     while(ch != '\n'){
+        if(ch == EOF){
+            end_ = true;
+            return ret;
+        }
         if(ch == '\r'){
             assert(getchar() == '\n');
             break;
@@ -24,9 +29,14 @@ std::vector<std::string> Interactor::readLine(){
 }
 
 void Interactor::tian(AccountSystem &account, BookSystem &book, LogSystem &log, Checker &checker){
+    std::cout << std::fixed << std::setprecision(2);
     assert(account.signup(turn("root"), turn("sjtu"), turn("root"), true));
     while(!end_){
-        checker.operate(readLine(), account, book, log, *this);
+        auto got = readLine();
+        if(end_){
+            return;
+        }
+        checker.operate(got, account, book, log, *this);
     }
     return;
 }

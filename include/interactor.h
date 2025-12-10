@@ -6,9 +6,12 @@
 #include <vector>
 
 struct Interactor{
-    Interactor() = default;
-    ~Interactor() = default;
     bool end_;
+    Interactor(){
+        end_ = false;
+        return;
+    }
+    ~Interactor() = default;
     std::vector<std::string> readLine();
     void tian(AccountSystem &, BookSystem &, LogSystem &, Checker &);// Start the system
 };

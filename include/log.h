@@ -12,6 +12,7 @@ struct LogSystem{
     ~LogSystem() = default;
     BlockList<Tfinance> finance_;
     BlockList<Tlog> log_;
+    void move(double v, bool income);
     bool show(int count);
     bool report_finance();
     bool report_employee();

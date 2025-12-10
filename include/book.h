@@ -5,15 +5,27 @@
 #include <iostream>
 #include <string>
 #include <vector>
-using Tbook = std::pair<std::array<char,61>, std::tuple<std::array<char,61>, std::array<char,61>, std::array<char,61>, std::array<char,61>, double, long long > >;
 
+using String = std::array<char,61>;
+using Tbook = std::pair<String, std::tuple<String, String, String, String, double, long long > >;
+
+std::string turnback(String);
+std::vector<String> split(std::array<char, 61>);
 struct BookSystem{
-    BookSystem() = default;
+    BlockList<Tbook> isbn_, bookname_, author_, keyword_;
+    BookSystem(){
+        isbn_.initialise("isbn.data");
+        bookname_.initialise("bookname.data");
+        author_.initialise("author.data");
+        keyword_.initialise("keyword.data");
+        return;
+    }
     ~BookSystem() = default;
-    BlockList<Tbook> book_;
-    bool show(std::array<char,61>, std::array<char,61>, std::array<char,61>, std::array<char,61>);
-    bool buy(std::array<char,61>, long long, AccountSystem &);
-    bool select(std::array<char,61>, AccountSystem &);
-    bool modify(std::array<char,61>, std::array<char,61>, std::array<char,61>, std::array<char,61>, double, AccountSystem &);
-    bool import(long long, double, AccountSystem &);
+    void change(Tbook, Tbook);
+    void insert(Tbook);
+    bool show(String, String, String, String, AccountSystem &);
+    bool buy(String, long long, AccountSystem &, LogSystem &);
+    bool select(String, AccountSystem &);
+    bool modify(String, String, String, String, double, AccountSystem &);
+    bool import(long long, double, AccountSystem &, LogSystem &);
 };

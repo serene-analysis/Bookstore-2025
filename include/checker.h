@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+using String = std::array<char,61>;
 enum Infotype{
     UserID, Password, CurrentPassword, NewPassword,
     Username,
@@ -17,7 +18,7 @@ enum Infotype{
     Price, TotalCost,
     Count
 };
-std::array<char,61> turn(std::string);
+String turn(std::string);
 bool single_keyword(std::string);
 bool duplicated_keyword(std::string);
 std::string remove_pre_suf(std::string, Infotype);
