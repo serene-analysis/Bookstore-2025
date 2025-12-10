@@ -229,7 +229,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             return false;
         }
         if(!valid(info[1], UserID) || !valid(info[2], Password) || !valid(info[3], Username))return false;
-        return account.signup(turn(info[1]), turn(info[2]), turn(info[3]));
+        return account.signup(turn(info[1]), turn(info[2]), turn(info[3]), false);
     }
     if(fir == "passwd"){
         if(size != 3 && size != 4){

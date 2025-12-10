@@ -1,4 +1,6 @@
 #pragma once
+#include <algorithm>
+#include <vector>
 #include <iostream>
 #include <array>
 #include <fstream>
@@ -178,7 +180,6 @@ std::cout << "append in the end" << std::endl;
         /* your code here */
     }
 
-    //读出位置索引index对应的T对象的值并赋值给t，保证调用的index都是由write函数产生
     T read(const int index, int delta) {
         T t;
         file.seekg(delta + sizeof(int)*info_len + sizeofT * (index-1), ios::beg);
@@ -187,7 +188,6 @@ std::cout << "append in the end" << std::endl;
         /* your code here */
     }
 
-    //删除位置索引index对应的对象(不涉及空间回收时，可忽略此函数)，保证调用的index都是由write函数产生
     bool remove(T &value, int delta) {
         /* your code here */
         int nsize = get_info(Ksize, delta);
@@ -226,7 +226,6 @@ std::cout << "delta = " << delta << ", remove!" << std::endl;
         }
         return false;
     }
-
     
     bool overall(T &value, int delta) {
         bool have = false;
@@ -242,6 +241,38 @@ std::cout << "delta = " << delta << ", remove!" << std::endl;
             }
         }
         return have;
+    }
+    
+    T findSimilar(T &value, int delta) {
+        bool have = false;
+        int nsize = get_info(Ksize, delta);
+        /* your code here */
+        file.seekg(delta + sizeof(int)*info_len, ios::beg);
+        T nv, ret = T();
+        for(int i=1;i<=nsize;i++){
+            file.read(reinterpret_cast<char*>(&nv), sizeofT);
+            if(similar(value, nv)){
+                ret = nv;
+            }
+        }
+        return ret;
+    }
+
+    void modify(T &given, T &arr, int delta) {
+        bool have = false;
+        int nsize = get_info(Ksize, delta);
+        /* your code here */
+        file.seekg(delta + sizeof(int)*info_len, ios::beg);
+        T nv;
+        for(int i=1;i<=nsize;i++){
+            file.read(reinterpret_cast<char*>(&nv), sizeofT);
+            if(given == nv){
+                file.seekp(-sizeofT, ios::cur);
+                file.write(reinterpret_cast<char*>(&arr), sizeofT);
+                return;
+            }
+        }
+        return;
     }
 };
 
@@ -285,6 +316,14 @@ public:
         }
         //std::cout << "sizeofT = " << sizeof(T) << std::endl;
         return;
+    }
+
+    bool empty(){
+        return number == 0;
+    }
+
+    int number(){
+        return number;
     }
 
     void insert(T &value) {
@@ -426,6 +465,127 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
                 std::cout << std::endl;
                 return;
             }
+        }
+        return;
+    }
+    
+    void pop_back(){
+        int now = head, left = number;
+        while(true){
+            if(list.empty(now)){
+                now = list.get_info(Knext, now);
+                if(!now){
+                    return;
+                }
+                continue;
+            }
+            /*similar(list.read(1, now), value);
+            similar(list.read(block, now), value);*/
+            int nsize = list.get_info(Ksize, now);
+            if(nsize == left){
+                list.remove(list.read(block, now), now);
+                return;
+            }
+            else{
+                left -= nsize;
+            }
+            now = list.get_info(Knext, now);
+            if(!now){
+                return;
+            }
+        }
+        return;
+    }
+
+    T findLast(){
+        int now = head;
+        T ret = T();
+        while(true){
+            if(list.empty(now)){
+                now = list.get_info(Knext, now);
+                if(!now){
+                    return ret;
+                }
+                continue;
+            }
+            /*similar(list.read(1, now), value);
+            similar(list.read(block, now), value);*/
+            ret = list.read(block, now);
+            now = list.get_info(Knext, now);
+            if(!now){
+                return ret;
+            }
+        }
+        return ret;
+    }
+
+    T findSimilar(T &value){
+        int now = head;
+        std::vector<int>got;
+        while(true){
+            if(list.empty(now)){
+                now = list.get_info(Knext, now);
+                if(!now){
+                    break;
+                }
+                continue;
+            }
+            if(list.read(block, now).first >= value.first && list.read(1, now).first <= value.first){
+                got.push_back(now);
+            }
+            else{
+                if(list.read(1, now).first > value.first){
+                    break;
+                }
+            }
+            now = list.get_info(Knext, now);
+            if(!now){
+                break;
+            }
+        }
+        std::reverse(got.begin(), got.end());
+        for(int nv : got){
+            T ngot = list.findSimilar(value, nv);
+            if(ngot != T()){
+                return ngot;
+            }
+        }
+        return T();
+    }
+
+    void modify(T &given, T &arr){
+        int now = head;
+        while(true){
+            if(list.empty(now)){
+                now = list.get_info(Knext, now);
+                if(!now){
+                    return;
+                }
+                continue;
+            }
+            if(list.read(block, now).first >= given.first && list.read(1, now).first <= given.first){
+                list.modify(given, arr, now);
+                return;
+            }
+            else{
+                if(list.read(1, now).first > given.first){
+                    return;
+                }
+            }
+            now = list.get_info(Knext, now);
+            if(!now){
+                return;
+            }
+        }
+    }
+
+    void renew(T &value){
+        T found = findSimilar(value);
+        if(found != T()){
+            modify(found, value);
+        }
+        else{
+            insert(value);
         }
         return;
     }

@@ -24,6 +24,7 @@ std::vector<std::string> Interactor::readLine(){
 }
 
 void Interactor::tian(AccountSystem &account, BookSystem &book, LogSystem &log, Checker &checker){
+    assert(account.signup(turn("root"), turn("sjtu"), turn("root"), true));
     while(!end_){
         checker.operate(readLine(), account, book, log, *this);
     }
