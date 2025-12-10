@@ -1,9 +1,13 @@
 #pragma once
+
 #include "blocklist.h"
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <array>
+#include <utility>
+#include <tuple>
 using Tfinance = std::pair<int,std::pair<double, double> >;
 using Tlog = std::pair<int, std::string>;
 

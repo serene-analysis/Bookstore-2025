@@ -1,6 +1,9 @@
 #include "account.h"
 #include "checker.h"
 #include <cassert>
+#include <array>
+#include <utility>
+#include <tuple>
 /*
 using Tselected = std::pair<String, std::tuple<String, String, String, String, double, long long > >;
 using Taccount = std::pair<String,std::tuple<String, int, String, Tselected > >;
@@ -43,13 +46,13 @@ bool AccountSystem::su(String userid, String password){
     if(want.first != userid)return false;
     if(password != String()){
         if(std::get<0>(want.second) != password)return false;
-        Tstackaccount ins = std::make_pair(stack_.number() + 1, want);
-        Tmap nmap = std::make_pair(userid, stack_.number() + 1);
+        Tstackaccount ins = std::make_pair(stack_.getnumber() + 1, want);
+        Tmap nmap = std::make_pair(userid, stack_.getnumber() + 1);
         stack_.insert(ins), map_.insert(nmap);
         return true;
     }
     if(std::get<1>(want.second) >= std::get<1>(now.second))return false;
-    Tstackaccount ins = std::make_pair(stack_.number() + 1, want);
+    Tstackaccount ins = std::make_pair(stack_.getnumber() + 1, want);
     stack_.insert(ins);
     return true;
 }

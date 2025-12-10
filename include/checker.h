@@ -6,6 +6,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <array>
+#include <utility>
+#include <tuple>
 using String = std::array<char,61>;
 enum Infotype{
     UserID, Password, CurrentPassword, NewPassword,
@@ -18,6 +21,7 @@ enum Infotype{
     Price, TotalCost,
     Count
 };
+class Interactor;
 String turn(std::string);
 bool single_keyword(std::string);
 bool duplicated_keyword(std::string);

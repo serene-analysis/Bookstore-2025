@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <array>
+#include <utility>
+#include <tuple>
 using String = std::array<char,61>;
 using Tselected = std::pair<String, std::tuple<String, String, String, String, double, long long > >;
 using Taccount = std::pair<String,std::tuple<String, int, String, Tselected > >;

@@ -1,5 +1,8 @@
 #include "book.h"
 #include "checker.h"
+#include <array>
+#include <utility>
+#include <tuple>
 /*
 using Tbook = std::pair<String, std::tuple<String, String, String, String, double, long long > >;
 */

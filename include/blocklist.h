@@ -3,6 +3,8 @@
 #include <vector>
 #include <iostream>
 #include <array>
+#include <utility>
+#include <tuple>
 #include <fstream>
 #include <cassert>
 
@@ -37,7 +39,7 @@ std::cout << std::endl;
 
 template<class T, int info_len = 2, int block = 500>
 class MemoryRiver {
-private:
+public:
     /* your code here */
     fstream file;
     std::string file_name;
@@ -45,7 +47,6 @@ private:
     int sizeofRiver = sizeof(int)*info_len + sizeofT * block;
     T pool[505];
 
-public:
 
     MemoryRiver() = default;
 
@@ -306,12 +307,11 @@ std::cout << "delta = " << delta << ", remove!" << std::endl;
 
 template<class T, int info_len = 2, int block = 500> // require T ==/<=/>=/</>/!= T
 class BlockList {
-private:
+public:
     std::string file_name;
     MemoryRiver<T,info_len,block> list;
     int sizeofRiver = sizeof(int)*info_len + sizeof(T)*block;
     int leftmemory = sizeof(int)*3;
-public:
     BlockList() = default;
     int size = 0, head = leftmemory, number = 0;
 
@@ -349,7 +349,7 @@ public:
         return number == 0;
     }
 
-    int number(){
+    int getnumber(){
         return number;
     }
 
@@ -412,7 +412,7 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
             list.write_info(nxt, Knext, arr);
             list.write_info(arr, Knext, now);
             for(int i=1;i<=(block-1)/2;i++){
-                std::pair<std::array<char,64>,unsigned int> nv = list.read(block-i, now);
+                T nv = list.read(block-i, now);
                 list.write(nv, arr);
                 list.remove(nv, now);
             }
@@ -469,7 +469,8 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
             similar(list.read(block, now), value);*/
             int nsize = list.get_info(Ksize, now);
             if(nsize == left){
-                list.remove(list.read(block, now), now);
+                T gv = list.read(block, now);
+                list.remove(gv, now);
                 return;
             }
             else{

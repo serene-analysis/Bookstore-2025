@@ -1,5 +1,10 @@
 #pragma once
 
+#include "blocklist.h"
+#include "account.h"
+#include "checker.h"
+#include "book.h"
+#include "log.h"
 #include <algorithm>
 #include <iostream>
 #include <string>

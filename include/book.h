@@ -1,10 +1,15 @@
 #pragma once
+
 #include "blocklist.h"
 #include "account.h"
+#include "log.h"
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <array>
+#include <utility>
+#include <tuple>
 
 using String = std::array<char,61>;
 using Tbook = std::pair<String, std::tuple<String, String, String, String, double, long long > >;
