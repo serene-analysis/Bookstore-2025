@@ -8,5 +8,7 @@
 struct Interactor{
     Interactor() = default;
     ~Interactor() = default;
+    bool end_;
     std::vector<std::string> readLine();
+    void tian(AccountSystem &, BookSystem &, LogSystem &, Checker &);// Start the system
 };

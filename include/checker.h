@@ -6,8 +6,25 @@
 #include <iostream>
 #include <string>
 #include <vector>
+enum Infotype{
+    UserID, Password, CurrentPassword, NewPassword,
+    Username,
+    Privilege,
+    ISBN,
+    BookName, Author,
+    Keyword,
+    Quantity,
+    Price, TotalCost,
+    Count
+};
+std::array<char,61> turn(std::string);
+bool single_keyword(std::string);
+bool duplicated_keyword(std::string);
+std::string remove_pre_suf(std::string, Infotype);
 struct Checker{
     Checker() = default;
     ~Checker() = default;
-    bool operate(std::vector<std::string>, AccountSystem &, BookSystem &, LogSystem &);
+    bool valid(std::string, Infotype);
+    bool pre_suf_valid(std::string, Infotype);
+    bool operate(std::vector<std::string>, AccountSystem &, BookSystem &, LogSystem &, Interactor &);
 };
