@@ -1,4 +1,5 @@
 #include "interactor.h"
+#include "checker.h"
 #include <cassert>
 std::vector<std::string> Interactor::readLine(){
     std::vector<std::string> ret;
@@ -20,4 +21,11 @@ std::vector<std::string> Interactor::readLine(){
         ch = getchar();
     }
     return ret;
+}
+
+void Interactor::tian(AccountSystem &account, BookSystem &book, LogSystem &log, Checker &checker){
+    while(!end_){
+        checker.operate(readLine(), account, book, log, *this);
+    }
+    return;
 }
