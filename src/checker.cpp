@@ -155,6 +155,9 @@ bool duplicated_keyword(std::string str){
             got += now;
         }
     }
+    if(apr[got]){
+        return true;
+    }
     return false;
 }
 
@@ -220,7 +223,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
     }
     std::string fir = *info.begin();
     int size = info.size();
-    //std::cout << "fir = " << fir << std::endl;
+    std::cout << "fir = " << fir << std::endl;
     if(fir == "quit" || fir == "exit"){
         if(size != 1){
             return false;
@@ -363,7 +366,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 if(gkeyword){
                     return false;
                 }
-                if(duplicated_keyword(info[wc])){
+                if(duplicated_keyword(remove_pre_suf(info[wc], Keyword))){
                     return false;
                 }
                 keyword = remove_pre_suf(info[wc], Keyword), gkeyword = true;

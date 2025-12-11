@@ -89,6 +89,9 @@ std::vector<String> split(std::array<char, 61> keyword){
             got += now;
         }
     }
+    if(!got.empty()){
+        mem.push_back(turn(got));
+    }
     return mem;
 }
 
