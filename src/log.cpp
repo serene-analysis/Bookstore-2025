@@ -27,14 +27,14 @@ bool LogSystem::show(int count, AccountSystem &account){
         std::cout << std::endl;
         return true;
     }
-    Tfinance all = finance_.findLast(), want = Tfinance();
+    Tfinance all = finance_.getnumber() == 0 ? Tfinance() : finance_.findLast(), want = Tfinance();
     want.first = all.first - count;
     if(want.first < 0)return false;
     if(count == -1 || want.first == 0){
-        std::cout << "+ " << (long double)(all.second.first) / 100.0 << " - " << (long double)(all.second.second) / 100.0 << std::endl;
+        std::cout << "+ " << (long double)(all.second.first + 1e-2) / 100.0 << " - " << (long double)(all.second.second + 1e-2) / 100.0 << std::endl;
         return true;
     }
     Tfinance got = finance_.findSimilar(want);
-    std::cout << "+ " << (long double)(all.second.first - got.second.first) / 100.0 << " - " << (long double)(all.second.second - got.second.second) / 100.0 << std::endl;
+    std::cout << "+ " << (long double)(all.second.first - got.second.first + 1e-2) / 100.0 << " - " << (long double)(all.second.second - got.second.second + 1e-2) / 100.0 << std::endl;
     return true;
 }
