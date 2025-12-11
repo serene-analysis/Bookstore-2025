@@ -136,7 +136,7 @@ bool AccountSystem::passwd(String userid, String currentPassword, String newPass
     return true;
 }
 
-bool AccountSystem::useradd(String userid, String password, int privilege, String username){
+bool AccountSystem::useradd(String userid, String password, long long privilege, String username){
     //std::cout << "useradd" << std::endl;
     //    std::cout << "stack.size() = " << stack_.getnumber() << ", map.size() = " << map_.getnumber() << std::endl;
     if(privilege != 0 && privilege != 1 && privilege != 3 && privilege != 7)return false;

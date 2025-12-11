@@ -35,7 +35,7 @@ struct AccountSystem{
     bool logout();
     bool signup(String, String, String, bool);
     bool passwd(String, String, String);
-    bool useradd(String, String, int, String);
+    bool useradd(String, String, long long, String);
     bool remove(String);
     bool select(Tselected);
     bool changeBook(Tselected, Tselected);

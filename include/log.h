@@ -22,7 +22,7 @@ struct LogSystem{
     }
     ~LogSystem() = default;
     void move(long long, bool);
-    bool show(int, AccountSystem &);
+    bool show(long long, AccountSystem &);
     bool report_finance(AccountSystem &);
     bool report_employee(AccountSystem &);
     bool log(AccountSystem &);

@@ -44,7 +44,6 @@ long long getInt(std::string str){
     return ret;
 }
 
-
 long long getUltimateInt(std::string str){
     long long ret = 0;
     for(char now : str){
@@ -371,7 +370,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             }
             if(can[3]){
                 //std::cout << "show by keyword" << std::endl;
-                if(!single_keyword(info[1]))return false;
+                if(!single_keyword(remove_pre_suf(info[1])))return false;
                 return book.show(turn(), turn(), turn(), turn(remove_pre_suf(info[1], Keyword)), account);
             }
             return false;
