@@ -191,18 +191,25 @@ std::string remove_pre_suf(std::string str, Infotype type){
 long long getInt(std::string str){
     long long ret = 0;
     bool doted = false;
+    int counter = 0;
     for(char now : str){
         if(now != '.'){
             ret = ret * 10 + now - '0';
+            if(doted){
+                counter++;
+            }
         }
         else{
             doted = true;
         }
     }
-    if(!doted){
+    if(counter == 0){
         ret *= 100;
     }
-    std::cerr << "ret = " << ret << std::endl;
+    if(counter == 1){
+        ret *= 10;
+    }
+    //std::cerr << "ret = " << ret << std::endl;
     return ret;
 }
 
