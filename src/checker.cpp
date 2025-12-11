@@ -72,7 +72,7 @@ bool duplicated_keyword(std::string str){
             got += now;
         }
     }
-    if(apr[got]){
+    if(!got.empty() && apr[got]){
         return true;
     }
     return false;
@@ -143,9 +143,6 @@ bool Checker::valid(std::string str, Infotype type){
                 return false;
             }
         }
-        if(duplicated_keyword(str)){
-            return false;
-        }
         int lasttype = 1;// In fact -1, but this is also right
         for(char now : str){
             if(now == '|'){
@@ -159,6 +156,9 @@ bool Checker::valid(std::string str, Infotype type){
             }
         }
         if(lasttype == 1){
+            return false;
+        }
+        if(duplicated_keyword(str)){
             return false;
         }
         return true;
@@ -406,32 +406,33 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 }
                 isbn = remove_pre_suf(info[wc], ISBN), gisbn = true;
             }
-            if(pre_suf_valid(info[wc], BookName)){
+            else if(pre_suf_valid(info[wc], BookName)){
                 if(gbookname){
                     return false;
                 }
                 bookname = remove_pre_suf(info[wc], BookName), gbookname = true;
             }
-            if(pre_suf_valid(info[wc], Author)){
+            else if(pre_suf_valid(info[wc], Author)){
                 if(gauthor){
                     return false;
                 }
                 author = remove_pre_suf(info[wc], Author), gauthor = true;
             }
-            if(pre_suf_valid(info[wc], Keyword)){
+            else if(pre_suf_valid(info[wc], Keyword)){
                 if(gkeyword){
                     return false;
                 }
-                
                 keyword = remove_pre_suf(info[wc], Keyword), gkeyword = true;
             }
-            if(pre_suf_valid(info[wc], Price)){
+            else if(pre_suf_valid(info[wc], Price)){
                 if(gprice){
                     return false;
                 }
                 price = remove_pre_suf(info[wc], Price), gprice = true;
             }
-            return false;
+            else{
+                return false;
+            }
         }
         return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), gprice ? getInt(price) : -1, account);
     }
