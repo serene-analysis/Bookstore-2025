@@ -1,5 +1,4 @@
 requirements.md
-./src/test.cpp
-/build
+./build
 ./TestPoints
 ./CMakeFiles
