@@ -12,7 +12,7 @@
 #include <tuple>
 
 using String = std::array<char,61>;
-using Tbook = std::pair<String, std::tuple<String, String, String, String, double, long long > >;
+using Tbook = std::pair<String, std::tuple<String, String, String, String, long double, long long > >;
 
 std::string turnback(String);
 std::vector<String> split(std::array<char, 61>);
@@ -31,6 +31,6 @@ struct BookSystem{
     bool show(String, String, String, String, AccountSystem &);
     bool buy(String, long long, AccountSystem &, LogSystem &);
     bool select(String, AccountSystem &);
-    bool modify(String, String, String, String, double, AccountSystem &);
-    bool import(long long, double, AccountSystem &, LogSystem &);
+    bool modify(String, String, String, String, long double, AccountSystem &);
+    bool import(long long, long double, AccountSystem &, LogSystem &);
 };

@@ -6,7 +6,7 @@
 #include <utility>
 #include <tuple>
 /*
-using Tselected = std::pair<String, std::tuple<String, String, String, String, double, long long > >;
+using Tselected = std::pair<String, std::tuple<String, String, String, String, long long double, long long > >;
 using Taccount = std::pair<String,std::tuple<String, int, String, Tselected > >;
 
 Tselected = pair<ISBN, tuple<ISBN,Name,Author,Keyword,Price,Quantity>>

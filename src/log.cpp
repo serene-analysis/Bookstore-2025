@@ -3,9 +3,9 @@
 #include <utility>
 #include <tuple>
 
-void LogSystem::move(double v, bool incomed){
+void LogSystem::move(long double v, bool incomed){
     int id = 1;
-    double income = 0.0, expense = 0.0;
+    long double income = 0.0, expense = 0.0;
     if(finance_.getnumber() != 0){
         Tfinance got = finance_.findLast();
         id = got.first + 1, income = got.second.first, expense = got.second.second;
