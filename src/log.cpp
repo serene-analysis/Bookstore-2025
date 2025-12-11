@@ -3,6 +3,28 @@
 #include <utility>
 #include <tuple>
 
+std::string getStrings(long long v){
+    std::string ret;
+    if(v < 100){
+        ret = "0.";
+        ret += (char)(v / 10 + '0');
+        ret += (char)(v % 10 + '0');
+    }
+    else{
+        long long x = v / 100;
+        while(x){
+            ret += (char)(x % 10 + '0');
+            x /= 10;
+        }
+        v %= 100;
+        std::reverse(ret.begin(), ret.end());
+        ret += '.';
+        ret += (char)(v / 10 + '0');
+        ret += (char)(v % 10 + '0');
+    }
+    return ret;
+}
+
 void LogSystem::move(long long v, bool incomed){
     int id = 1;
     long long income = 0.0, expense = 0.0;
@@ -31,10 +53,10 @@ bool LogSystem::show(int count, AccountSystem &account){
     want.first = all.first - count;
     if(want.first < 0)return false;
     if(count == -1 || want.first == 0){
-        std::cout << "+ " << (long double)(all.second.first) / 100.0  + 1e-4 << " - " << (long double)(all.second.second) / 100.0 + 1e-4 << std::endl;
+        std::cout << "+ " << getStrings(all.second.first) << " - " << getStrings(all.second.second) << std::endl;
         return true;
     }
     Tfinance got = finance_.findSimilar(want);
-    std::cout << "+ " << (long double)(all.second.first - got.second.first) / 100.0 + 1e-4 << " - " << (long double)(all.second.second - got.second.second) / 100.0 + 1e-4 << std::endl;
+    std::cout << "+ " << getStrings(all.second.first - got.second.first) << " - " << getStrings(all.second.second - got.second.second) << std::endl;
     return true;
 }

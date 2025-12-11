@@ -28,6 +28,28 @@ void out(Tbook book){
     return;
 }
 
+std::string getString(long long v){
+    std::string ret;
+    if(v < 100){
+        ret = "0.";
+        ret += (char)(v / 10 + '0');
+        ret += (char)(v % 10 + '0');
+    }
+    else{
+        long long x = v / 100;
+        v %= 100;
+        while(x){
+            ret += (char)(x % 10 + '0');
+            x /= 10;
+        }
+        std::reverse(ret.begin(), ret.end());
+        ret += '.';
+        ret += (char)(v / 10 + '0');
+        ret += (char)(v % 10 + '0');
+    }
+    return ret;
+}
+
 bool BookSystem::show(String isbn, String bookname, String author, String keyword, AccountSystem &account){
     //std::cout << "show book" << std::endl;
     Tbook given = Tbook();
@@ -68,7 +90,7 @@ bool BookSystem::show(String isbn, String bookname, String author, String keywor
         std::tie(isbn, bookname, author, keyword, price, quantity) = now.second;
         //std::cout << price << std::endl;
         std::cout << turnback(isbn) << '\t' << turnback(bookname) << '\t' << turnback(author) << '\t' <<
-            turnback(keyword) << '\t' << (long double)(price) / 100.0 + 1e-4 << '\t' << quantity << std::endl;
+            turnback(keyword) << '\t' << getString(price) << '\t' << quantity << std::endl;
     }
     if(got.empty()){
         std::cout << std::endl;
@@ -155,7 +177,7 @@ bool BookSystem::buy(String isbn, long long quantity, AccountSystem &account, Lo
     if(arr.first != given.first)return false;
     if(std::get<5>(arr.second) < quantity)return false;
     long long cost = std::get<4>(arr.second) * quantity;
-    std::cout << (long double)(cost) / 100.0 + 1e-4 << std::endl;
+    std::cout << getString(cost) << std::endl;
     std::get<5>(arr.second) -= quantity;
     log.move(cost, true);
     change(mem, arr);

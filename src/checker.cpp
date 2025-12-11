@@ -188,6 +188,24 @@ std::string remove_pre_suf(std::string str, Infotype type){
     return "";
 }
 
+long long getInt(std::string str){
+    long long ret = 0;
+    bool doted = false;
+    for(char now : str){
+        if(now != '.'){
+            ret = ret * 10 + now - '0';
+        }
+        else{
+            doted = true;
+        }
+    }
+    if(!doted){
+        ret *= 100;
+    }
+    std::cerr << "ret = " << ret << std::endl;
+    return ret;
+}
+
 bool Checker::pre_suf_valid(std::string str, Infotype type){
     if(type == ISBN){
         if(str.length() <= 6){
@@ -385,14 +403,14 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 price = remove_pre_suf(info[wc], Price), gprice = true;
             }
         }
-        return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), gprice ? std::stold(price) * 100ll : -1, account);
+        return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), gprice ? getInt(price) : -1, account);
     }
     if(fir == "import"){
         if(size != 3){
             return false;
         }
         if(!valid(info[1], Quantity) || !valid(info[2], TotalCost))return false;
-        return book.import(std::stoll(info[1]), std::stold(info[2]) * 100ll, account, log);
+        return book.import(std::stoll(info[1]), getInt(info[2]), account, log);
     }
     return false;
 }
