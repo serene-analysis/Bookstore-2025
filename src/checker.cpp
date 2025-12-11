@@ -416,6 +416,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 }
                 price = remove_pre_suf(info[wc], Price), gprice = true;
             }
+            return false;
         }
         return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), gprice ? getInt(price) : -1, account);
     }
