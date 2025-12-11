@@ -13,6 +13,11 @@ String turn(std::string str = ""){
     return ret;
 }
 
+bool is_invisible(char c) {
+    unsigned char uc = static_cast<unsigned char>(c);
+    return uc <= 31 || uc == 127;
+}
+
 bool Checker::valid(std::string str, Infotype type){
     if(type == UserID || type == Password || type == CurrentPassword || type == NewPassword){
         if(str.length() > 30){
@@ -41,7 +46,7 @@ bool Checker::valid(std::string str, Infotype type){
             return false;
         }
         for(char now : str){
-            if(isspace(now)){
+            if(is_invisible(now)){
                 return false;
             }
         }
@@ -52,7 +57,7 @@ bool Checker::valid(std::string str, Infotype type){
             return false;
         }
         for(char now : str){
-            if(isspace(now)){
+            if(is_invisible(now)){
                 return false;
             }
         }
@@ -63,7 +68,7 @@ bool Checker::valid(std::string str, Infotype type){
             return false;
         }
         for(char now : str){
-            if(isspace(now) || now == '\"'){
+            if(is_invisible(now) || now == '\"'){
                 return false;
             }
         }
@@ -74,7 +79,7 @@ bool Checker::valid(std::string str, Infotype type){
             return false;
         }
         for(char now : str){
-            if(isspace(now) || now == '\"'){
+            if(is_invisible(now) || now == '\"'){
                 return false;
             }
         }
