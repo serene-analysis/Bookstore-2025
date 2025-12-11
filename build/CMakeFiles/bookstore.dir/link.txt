@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/bookstore.dir/src/account.cpp.o CMakeFiles/bookstore.dir/src/blocklist.cpp.o CMakeFiles/bookstore.dir/src/book.cpp.o CMakeFiles/bookstore.dir/src/checker.cpp.o CMakeFiles/bookstore.dir/src/interactor.cpp.o CMakeFiles/bookstore.dir/src/log.cpp.o CMakeFiles/bookstore.dir/src/main.cpp.o -o bookstore 

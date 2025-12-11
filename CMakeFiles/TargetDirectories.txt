@@ -1,0 +1,3 @@
+/home/enovo/Bookstore-2025/CMakeFiles/bookstore.dir
+/home/enovo/Bookstore-2025/CMakeFiles/edit_cache.dir
+/home/enovo/Bookstore-2025/CMakeFiles/rebuild_cache.dir
