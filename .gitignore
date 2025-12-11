@@ -1,4 +1,4 @@
 requirements.md
-./build
-./TestPoints
-./CMakeFiles
+./build/
+./TestPoints/
+./CMakeFiles/
