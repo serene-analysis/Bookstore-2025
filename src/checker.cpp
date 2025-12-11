@@ -135,7 +135,7 @@ bool Checker::valid(std::string str, Infotype type){
                 return false;
             }
         }
-        if(getInt(str) >= 2147483647){
+        if(getInt(str) > 2147483647){
             return false;
         }
         return true;
@@ -160,7 +160,7 @@ bool Checker::valid(std::string str, Infotype type){
                 return false;
             }
         }
-        if(getInt(str) >= 2147483647){
+        if(getInt(str) > 2147483647){
             return false;
         }
         return true;
