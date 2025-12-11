@@ -10,6 +10,12 @@ void LogSystem::move(double v, bool incomed){
         Tfinance got = finance_.findLast();
         id = got.first + 1, income = got.second.first, expense = got.second.second;
     }
+    if(incomed){
+        income += v;
+    }
+    else{
+        expense += v;
+    }
     Tfinance to = std::make_pair(id, std::make_pair(income, expense));
     finance_.insert(to);
     return;

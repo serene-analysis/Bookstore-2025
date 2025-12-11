@@ -9,7 +9,7 @@ std::vector<std::string> Interactor::readLine(){
     while(ch != '\n'){
         if(ch == EOF){
             end_ = true;
-            return ret;
+            break;
         }
         if(ch == '\r'){
             assert(getchar() == '\n');
@@ -25,20 +25,27 @@ std::vector<std::string> Interactor::readLine(){
         }
         ch = getchar();
     }
+    if(!got.empty()){
+        ret.push_back(got);
+    }
     return ret;
 }
 
 void Interactor::tian(AccountSystem &account, BookSystem &book, LogSystem &log, Checker &checker){
     std::cout << std::fixed << std::setprecision(2);
     if(account.account_.number == 0){
+        //std::cout << "create root" << std::endl;
         assert(account.signup(turn("root"), turn("sjtu"), turn("root"), true));
     }
+    //std::cout << "ok!" << std::endl;
     while(!end_){
         auto got = readLine();
         if(end_){
             return;
         }
-        checker.operate(got, account, book, log, *this);
+        if(!checker.operate(got, account, book, log, *this)){
+            std::cout << "Invalid" << std::endl;
+        }
     }
     return;
 }

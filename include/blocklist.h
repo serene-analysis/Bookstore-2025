@@ -468,9 +468,10 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
             /*similar(list.read(1, now), value);
             similar(list.read(block, now), value);*/
             int nsize = list.get_info(Ksize, now);
+            //std::cout << "left = " << left << ", nsize = " << nsize << std::endl;
             if(nsize == left){
                 T gv = list.read(block, now);
-                list.remove(gv, now);
+                remove(gv);
                 return;
             }
             else{

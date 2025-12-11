@@ -25,6 +25,28 @@ bool Checker::valid(std::string str, Infotype type){
         }
         return true;
     }
+    if(type == Privilege){
+        if(str.length() > 1){
+            return false;
+        }
+        for(char now : str){
+            if(!isdigit(now)){
+                return false;
+            }
+        }
+        return true;
+    }
+    if(type == Username){
+        if(str.length() > 30){
+            return false;
+        }
+        for(char now : str){
+            if(isblank(now)){
+                return false;
+            }
+        }
+        return true;
+    }
     if(type == ISBN){
         if(str.length() > 20){
             return false;
@@ -139,19 +161,19 @@ bool duplicated_keyword(std::string str){
 std::string remove_pre_suf(std::string str, Infotype type){
     int len = str.length();
     if(type == ISBN){
-        return str.substr(6, len - 1);
+        return str.substr(6, len - 6);
     }
     if(type == BookName){
-        return str.substr(7, len - 2);
+        return str.substr(7, len - 8);
     }
     if(type == Author){
-        return str.substr(9, len - 2);
+        return str.substr(9, len - 10);
     }
     if(type == Keyword){
-        return str.substr(10, len - 2);
+        return str.substr(10, len - 11);
     }
     if(type == Price){
-        return str.substr(7, len - 1);
+        return str.substr(7, len - 7);
     }
     throw -1;
     return "";
@@ -162,31 +184,31 @@ bool Checker::pre_suf_valid(std::string str, Infotype type){
         if(str.length() <= 6){
             return false;
         }
-        return str.substr(0, 5) == "-ISBN=";
+        return str.substr(0, 6) == "-ISBN=";
     }
     if(type == BookName){
         if(str.length() <= 8){
             return false;
         }
-        return str.substr(0, 6) == "-name=\"" && str.back() == '\"';
+        return str.substr(0, 7) == "-name=\"" && str.back() == '\"';
     }
     if(type == Author){
         if(str.length() <= 10){
             return false;
         }
-        return str.substr(0, 8) == "-author=\"" && str.back() == '\"';
+        return str.substr(0, 9) == "-author=\"" && str.back() == '\"';
     }
     if(type == Keyword){
         if(str.length() <= 11){
             return false;
         }
-        return str.substr(0, 9) == "-keyword=\"" && str.back() == '\"';
+        return str.substr(0, 10) == "-keyword=\"" && str.back() == '\"';
     }
     if(type == Price){
         if(str.length() <= 7){
             return false;
         }
-        return str.substr(0, 6) == "-price=";
+        return str.substr(0, 7) == "-price=";
     }
     throw -1;
     return false;
@@ -198,6 +220,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
     }
     std::string fir = *info.begin();
     int size = info.size();
+    //std::cout << "fir = " << fir << std::endl;
     if(fir == "quit" || fir == "exit"){
         if(size != 1){
             return false;
@@ -278,15 +301,19 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             }
             bool can[4] = {pre_suf_valid(info[1], ISBN), pre_suf_valid(info[1], BookName), pre_suf_valid(info[1], Author), pre_suf_valid(info[1], Keyword)};
             if(can[0]){
+                //std::cout << "show by ISBN" << std::endl;
                 return book.show(turn(remove_pre_suf(info[1], ISBN)), turn(), turn(), turn(), account);
             }
             if(can[1]){
+                //std::cout << "show by bookname" << std::endl;
                 return book.show(turn(), turn(remove_pre_suf(info[1], BookName)), turn(), turn(), account);
             }
             if(can[2]){
+                //std::cout << "show by author" << std::endl;
                 return book.show(turn(), turn(), turn(remove_pre_suf(info[1], Author)), turn(), account);
             }
             if(can[3]){
+                //std::cout << "show by keyword" << std::endl;
                 if(!single_keyword(info[1]))return false;
                 return book.show(turn(), turn(), turn(), turn(remove_pre_suf(info[1], Keyword)), account);
             }
@@ -339,7 +366,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 if(duplicated_keyword(info[wc])){
                     return false;
                 }
-                keyword = remove_pre_suf(info[wc], ISBN), gkeyword = true;
+                keyword = remove_pre_suf(info[wc], Keyword), gkeyword = true;
             }
             if(pre_suf_valid(info[wc], Price)){
                 if(gprice){
@@ -357,6 +384,5 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
         if(!valid(info[1], Quantity) || !valid(info[2], TotalCost))return false;
         return book.import(std::stoll(info[1]), std::stod(info[2]), account, log);
     }
-    throw "error";
     return false;
 }

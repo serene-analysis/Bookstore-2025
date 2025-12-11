@@ -17,29 +17,54 @@ std::string turnback(String arr){
     return ret;
 }
 
+void out(Tbook book){
+    std::cout << "sortkeyword = " << turnback(book.first) << std::endl;
+    std::cout << "isbn = " << turnback(std::get<0>(book.second)) << std::endl;
+    std::cout << "bookname = " << turnback(std::get<1>(book.second)) << std::endl;
+    std::cout << "author = " << turnback(std::get<2>(book.second)) << std::endl;
+    std::cout << "keyword = " << turnback(std::get<3>(book.second)) << std::endl;
+    std::cout << "price = " << std::get<4>(book.second) << std::endl;
+    std::cout << "quantity = " << std::get<5>(book.second) << std::endl;
+    return;
+}
+
 bool BookSystem::show(String isbn, String bookname, String author, String keyword, AccountSystem &account){
-    if(account.currentPrivilege() < 1)return false;
+    //std::cout << "show book" << std::endl;
     Tbook given = Tbook();
     std::vector<Tbook> got;
+    if(account.currentPrivilege() < 1){
+        //std::cout << "currentPrivilege() = " << account.currentPrivilege() << std::endl;
+        return false;
+    }
     if(isbn != String()){
+        //std::cout << "isbn not empty" << std::endl;
         given.first = isbn;
+        //std::cout << turnback(isbn) << std::endl;
         got = isbn_.allSimilar(given);
     }
     else if(bookname != String()){
+        //std::cout << "bookname not empty" << std::endl;
         given.first = bookname;
         got = bookname_.allSimilar(given);
     }
     else if(author != String()){
+        //std::cout << "author not empty" << std::endl;
         given.first = author;
         got = author_.allSimilar(given);
     }
-    else if(author != String()){
-        given.first = author;
-        got = author_.allSimilar(given);
+    else if(keyword != String()){
+        //std::cout << "keyword not empty" << std::endl;
+        given.first = keyword;
+        //std::cout << "given:" << std::endl;
+        //out(given);
+        got = keyword_.allSimilar(given);
     }
     else{
         got = isbn_.all();
     }
+
+    //out(given);
+
     for(Tbook now : got){
         double price;
         long long quantity;// A problem here
@@ -68,6 +93,8 @@ std::vector<String> split(std::array<char, 61> keyword){
 }
 
 void BookSystem::change(Tbook now, Tbook arr){
+    //std::cout << "book.modify:"  << std::endl;
+    //out(now), out(arr);
     String isbn, bookname, author, keyword;
     double price;
     long long quantity;
@@ -96,6 +123,8 @@ void BookSystem::change(Tbook now, Tbook arr){
 }
 
 void BookSystem::insert(Tbook arr){
+    //std::cout << "book.insert:"  << std::endl;
+    //out(arr);
     String isbn, bookname, author, keyword;
     double price;
     long long quantity;
@@ -104,11 +133,10 @@ void BookSystem::insert(Tbook arr){
     Tbook gisbn = std::make_pair(isbn, arr.second),
         gbookname = std::make_pair(bookname, arr.second),
         gauthor = std::make_pair(author, arr.second);
-    std::vector<String> skeyword = split(keyword);
     isbn_.insert(gisbn);
     bookname_.insert(gbookname);
     author_.insert(gauthor);
-    for(auto fir : skeyword){
+    for(auto fir : fkeyword){
         Tbook ins = std::make_pair(fir, arr.second);
         keyword_.insert(ins);
     }
@@ -116,14 +144,17 @@ void BookSystem::insert(Tbook arr){
 }
 
 bool BookSystem::buy(String isbn, long long quantity, AccountSystem &account, LogSystem &log){
-    if(account.currentPrivilege() < 3)return false;
+    //std::cout << "privilege = " << account.currentPrivilege() << std::endl;
+    if(account.currentPrivilege() < 1)return false;
     if(quantity <= 0)return false;
     Tbook given = Tbook();
     given.first = isbn;
     Tbook arr = isbn_.findSimilar(given), mem = arr;
+    //std::cout << "price = " << std::get<4>(arr.second) << ", quantity = " << std::get<5>(arr.second) << std::endl;
     if(arr.first != given.first)return false;
     if(std::get<5>(arr.second) < quantity)return false;
     double cost = std::get<4>(arr.second) * quantity;
+    std::cout << cost << std::endl;
     std::get<5>(arr.second) -= quantity;
     log.move(cost, true);
     change(mem, arr);
@@ -131,9 +162,11 @@ bool BookSystem::buy(String isbn, long long quantity, AccountSystem &account, Lo
 }
 
 bool BookSystem::select(String isbn, AccountSystem &account){
+    //std::cout << "select, book.number = " << isbn_.getnumber() << std::endl;
     if(account.currentPrivilege() < 3)return false;
     Tbook given = Tbook();
     given.first = isbn;
+    std::get<0>(given.second) = isbn;
     Tbook arr = isbn_.findSimilar(given), got = arr;
     if(arr.first != isbn){
         insert(given);
@@ -144,15 +177,18 @@ bool BookSystem::select(String isbn, AccountSystem &account){
 
 bool BookSystem::modify(String isbn, String bookname, String author,
     String keyword, double price, AccountSystem &account){
+        //std::cout << "modify, book.number = " << isbn_.getnumber() << std::endl;
+        //std::cout << "privilege = " << account.currentPrivilege() << std::endl;
         if(account.currentPrivilege() < 3)return false;
         Tbook now = account.currentBook(), arr = now;
-        if(now == Tbook())return false;
-        if(isbn != String()){
-            std::get<0>(arr.second) = isbn;
-            if(isbn_.findSimilar(arr) != Tbook())return false;
+        if(now == Tbook()){
+            //std::cout << "not selected" << std::endl;
+            return false;
         }
         if(isbn != String()){
             std::get<0>(arr.second) = isbn;
+            arr.first = isbn;
+            if(isbn_.findSimilar(arr) != Tbook())return false;
         }
         if(bookname != String()){
             std::get<1>(arr.second) = bookname;

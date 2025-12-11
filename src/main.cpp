@@ -12,6 +12,8 @@ LogSystem log;
 Checker checker;
 Interactor interactor;
 signed main(){
+    freopen("test.in","r",stdin);
+    //std::cout << "???" << std::endl;
     interactor.tian(account, book, log, checker);
     return 0;
 }
