@@ -163,8 +163,11 @@ bool Checker::valid(std::string str, Infotype type){
         }
         return true;
     }
-    if(type == Quantity){
+    if(type == Quantity || type == Count){
         if(str.length() > 10){
+            return false;
+        }
+        if(str[0] == '0'){
             return false;
         }
         for(char now : str){
@@ -181,24 +184,13 @@ bool Checker::valid(std::string str, Infotype type){
         if(str.length() > 13){
             return false;
         }
+        if(str[0] == '0' || str[0] == '.' || str.back() == '.'){
+            return false;
+        }
         for(char now : str){
             if(!(isdigit(now) || now == '.')){
                 return false;
             }
-        }
-        return true;
-    }
-    if(type == Count){
-        if(str.length() > 10){
-            return false;
-        }
-        for(char now : str){
-            if(!isdigit(now)){
-                return false;
-            }
-        }
-        if(getInt(str) > 2147483647){
-            return false;
         }
         return true;
     }
