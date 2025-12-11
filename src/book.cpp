@@ -4,7 +4,7 @@
 #include <utility>
 #include <tuple>
 /*
-using Tbook = std::pair<String, std::tuple<String, String, String, String, long double, long long > >;
+using Tbook = std::pair<String, std::tuple<String, String, String, String, long long, long long > >;
 */
 
 std::string turnback(String arr){
@@ -63,7 +63,7 @@ bool BookSystem::show(String isbn, String bookname, String author, String keywor
         got = isbn_.all();
     }
     for(Tbook now : got){
-        long double price;
+        long long price;
         long long quantity;// A problem here
         std::tie(isbn, bookname, author, keyword, price, quantity) = now.second;
         std::cout << turnback(isbn) << '\t' << turnback(bookname) << '\t' << turnback(author) << '\t' <<
@@ -96,7 +96,7 @@ void BookSystem::change(Tbook now, Tbook arr){
     //std::cout << "book.modify:"  << std::endl;
     //out(now), out(arr);
     String isbn, bookname, author, keyword;
-    long double price;
+    long long price;
     long long quantity;
     std::tie(isbn, bookname, author, keyword, price, quantity) = now.second;
     Tbook misbn = std::make_pair(isbn, now.second),
@@ -126,7 +126,7 @@ void BookSystem::insert(Tbook arr){
     //std::cout << "book.insert:"  << std::endl;
     //out(arr);
     String isbn, bookname, author, keyword;
-    long double price;
+    long long price;
     long long quantity;
     std::tie(isbn, bookname, author, keyword, price, quantity) = arr.second;
     std::vector<String> fkeyword = split(keyword);
@@ -153,8 +153,8 @@ bool BookSystem::buy(String isbn, long long quantity, AccountSystem &account, Lo
     //std::cout << "price = " << std::get<4>(arr.second) << ", quantity = " << std::get<5>(arr.second) << std::endl;
     if(arr.first != given.first)return false;
     if(std::get<5>(arr.second) < quantity)return false;
-    long double cost = std::get<4>(arr.second) * quantity;
-    std::cout << cost << std::endl;
+    long long cost = std::get<4>(arr.second) * quantity;
+    std::cout << (long double)(cost) / 100.0 << std::endl;
     std::get<5>(arr.second) -= quantity;
     log.move(cost, true);
     change(mem, arr);
@@ -176,7 +176,7 @@ bool BookSystem::select(String isbn, AccountSystem &account){
 }
 
 bool BookSystem::modify(String isbn, String bookname, String author,
-    String keyword, long double price, AccountSystem &account){
+    String keyword, long long price, AccountSystem &account){
         //std::cout << "modify, book.number = " << isbn_.getnumber() << std::endl;
         //std::cout << "privilege = " << account.currentPrivilege() << std::endl;
         if(account.currentPrivilege() < 3)return false;
@@ -206,7 +206,7 @@ bool BookSystem::modify(String isbn, String bookname, String author,
         return account.changeBook(now, arr);
     }
 
-bool BookSystem::import(long long quantity, long double totalcost, AccountSystem &account, LogSystem &log){
+bool BookSystem::import(long long quantity, long long totalcost, AccountSystem &account, LogSystem &log){
     if(account.currentPrivilege() < 3)return false;
     if(quantity <= 0 || totalcost <= 0)return false;
     Tbook now = account.currentBook(), arr = now;

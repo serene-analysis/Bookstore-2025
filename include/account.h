@@ -8,7 +8,7 @@
 #include <utility>
 #include <tuple>
 using String = std::array<char,61>;
-using Tselected = std::pair<String, std::tuple<String, String, String, String, double, long long > >;
+using Tselected = std::pair<String, std::tuple<String, String, String, String, long long, long long > >;
 using Taccount = std::pair<String,std::tuple<String, int, String, Tselected > >;
 using Tstackaccount = std::pair<int, Taccount>;
 using Tmap = std::pair<String, int>;

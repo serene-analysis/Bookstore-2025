@@ -9,7 +9,7 @@
 #include <array>
 #include <utility>
 #include <tuple>
-using Tfinance = std::pair<int,std::pair<long double, long double> >;
+using Tfinance = std::pair<int,std::pair<long long, long long> >;
 using Tlog = std::pair<int, std::string>;
 
 struct LogSystem{
@@ -21,7 +21,7 @@ struct LogSystem{
         return;
     }
     ~LogSystem() = default;
-    void move(long double, bool);
+    void move(long long, bool);
     bool show(int, AccountSystem &);
     bool report_finance(AccountSystem &);
     bool report_employee(AccountSystem &);
