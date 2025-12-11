@@ -385,14 +385,14 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 price = remove_pre_suf(info[wc], Price), gprice = true;
             }
         }
-        return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), gprice ? std::stod(price) * 100ll : -1, account);
+        return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), gprice ? std::stold(price) * 100ll : -1, account);
     }
     if(fir == "import"){
         if(size != 3){
             return false;
         }
         if(!valid(info[1], Quantity) || !valid(info[2], TotalCost))return false;
-        return book.import(std::stoll(info[1]), std::stod(info[2]) * 100ll, account, log);
+        return book.import(std::stoll(info[1]), std::stold(info[2]) * 100ll, account, log);
     }
     return false;
 }

@@ -67,7 +67,7 @@ bool BookSystem::show(String isbn, String bookname, String author, String keywor
         long long quantity;// A problem here
         std::tie(isbn, bookname, author, keyword, price, quantity) = now.second;
         std::cout << turnback(isbn) << '\t' << turnback(bookname) << '\t' << turnback(author) << '\t' <<
-            turnback(keyword) << '\t' << price << '\t' << quantity << std::endl;
+            turnback(keyword) << '\t' << (long double)(price) / 100.0 << '\t' << quantity << std::endl;
     }
     if(got.empty()){
         std::cout << std::endl;
