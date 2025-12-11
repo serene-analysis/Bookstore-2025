@@ -220,35 +220,36 @@ std::string remove_pre_suf(std::string str, Infotype type){
 }
 
 bool Checker::pre_suf_valid(std::string str, Infotype type){
+    int len = str.length();
     if(type == ISBN){
         if(str.length() <= 6){
             return false;
         }
-        return str.substr(0, 6) == "-ISBN=";
+        return str.substr(0, 6) == "-ISBN=" && valid(str.substr(6, len - 6), ISBN);
     }
     if(type == BookName){
         if(str.length() <= 8){
             return false;
         }
-        return str.substr(0, 7) == "-name=\"" && str.back() == '\"';
+        return str.substr(0, 7) == "-name=\"" && str.back() == '\"' && valid(str.substr(7, len - 8), BookName);
     }
     if(type == Author){
         if(str.length() <= 10){
             return false;
         }
-        return str.substr(0, 9) == "-author=\"" && str.back() == '\"';
+        return str.substr(0, 9) == "-author=\"" && str.back() == '\"' && valid(str.substr(9, len - 10), Author);
     }
     if(type == Keyword){
         if(str.length() <= 11){
             return false;
         }
-        return str.substr(0, 10) == "-keyword=\"" && str.back() == '\"';
+        return str.substr(0, 10) == "-keyword=\"" && str.back() == '\"' && valid(str.substr(10, len - 11), Keyword);
     }
     if(type == Price){
         if(str.length() <= 7){
             return false;
         }
-        return str.substr(0, 7) == "-price=";
+        return str.substr(0, 7) == "-price=" && valid(str.substr(7, len - 7), Price);
     }
     throw -1;
     return false;
