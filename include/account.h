@@ -23,7 +23,10 @@ struct AccountSystem{
         map_.initialise("map.data");
         return;
     }
-    ~AccountSystem() = default;
+    ~AccountSystem(){
+        exit();
+        return;
+    }
     Taccount currentAccount();
     int currentPrivilege();
     Tselected currentBook();
