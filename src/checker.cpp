@@ -167,13 +167,13 @@ bool Checker::valid(std::string str, Infotype type){
         if(str.length() > 10){
             return false;
         }
-        if(str[0] == '0'){
-            return false;
-        }
         for(char now : str){
             if(!isdigit(now)){
                 return false;
             }
+        }
+        if(str[0] == '0' && str.size() != 1){
+            return false;
         }
         if(getInt(str) > 2147483647){
             return false;
@@ -184,8 +184,13 @@ bool Checker::valid(std::string str, Infotype type){
         if(str.length() > 13){
             return false;
         }
-        if(str[0] == '0' || str[0] == '.' || str.back() == '.'){
+        if(str[0] == '.' || str.back() == '.'){
             return false;
+        }
+        if(str[0] == '0'){
+            if(str.length() >= 2){
+                if(str[1] != '.')return false;
+            }
         }
         for(char now : str){
             if(!(isdigit(now) || now == '.')){
