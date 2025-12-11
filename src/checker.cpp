@@ -44,6 +44,21 @@ long long getInt(std::string str){
     return ret;
 }
 
+
+long long getUltimateInt(std::string str){
+    long long ret = 0;
+    for(char now : str){
+        if(now != '.'){
+            ret = ret * 10 + now - '0';
+        }
+        else{
+            return -2;
+        }
+    }
+    //std::cerr << "ret = " << ret << std::endl;
+    return ret;
+}
+
 bool Checker::valid(std::string str, Infotype type){
     if(type == UserID || type == Password || type == CurrentPassword || type == NewPassword){
         if(str.length() > 30){
@@ -314,7 +329,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             return false;
         }
         if(!valid(info[1], UserID) || !valid(info[2], Password) || !valid(info[3], Privilege) || !valid(info[4], Username))return false;
-        return account.useradd(turn(info[1]), turn(info[2]), std::stoi(info[3]), turn(info[4]));
+        return account.useradd(turn(info[1]), turn(info[2]), getUltimateInt(info[3]), turn(info[4]));
     }
     if(fir == "delete"){
         if(size != 2){
@@ -335,7 +350,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 return log.show(-1, account);
             }
             if(!valid(info[2], Count))return false;
-            return log.show(std::stoi(info[2]), account);
+            return log.show(getUltimateInt(info[2]), account);
         }
         else{
             if(size != 2){
@@ -367,7 +382,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             return false;
         }
         if(!valid(info[1], ISBN) || !valid(info[2], Quantity))return false;
-        return book.buy(turn(info[1]), std::stoll(info[2]), account, log);
+        return book.buy(turn(info[1]), getUltimateInt(info[2]), account, log);
     }
     if(fir == "select"){
         if(size != 2){
@@ -425,7 +440,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             return false;
         }
         if(!valid(info[1], Quantity) || !valid(info[2], TotalCost))return false;
-        return book.import(std::stoll(info[1]), getInt(info[2]), account, log);
+        return book.import(getUltimateInt(info[1]), getInt(info[2]), account, log);
     }
     return false;
 }
