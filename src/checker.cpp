@@ -58,6 +58,26 @@ long long getUltimateInt(std::string str){
     return ret;
 }
 
+bool duplicated_keyword(std::string str){
+    std::map<std::string,bool> apr;
+    std::string got;
+    for(char now : str){
+        if(now == '|'){
+            if(apr[got]){
+                return true;
+            }
+            apr[got] = true, got.clear();
+        }
+        else{
+            got += now;
+        }
+    }
+    if(apr[got]){
+        return true;
+    }
+    return false;
+}
+
 bool Checker::valid(std::string str, Infotype type){
     if(type == UserID || type == Password || type == CurrentPassword || type == NewPassword){
         if(str.length() > 30){
@@ -122,6 +142,9 @@ bool Checker::valid(std::string str, Infotype type){
             if(is_invisible(now) || now == '\"'){
                 return false;
             }
+        }
+        if(duplicated_keyword(str)){
+            return false;
         }
         int lasttype = 1;// In fact -1, but this is also right
         for(char now : str){
@@ -190,26 +213,6 @@ bool single_keyword(std::string str){
         }
     }
     return true;
-}
-
-bool duplicated_keyword(std::string str){
-    std::map<std::string,bool> apr;
-    std::string got;
-    for(char now : str){
-        if(now == '|'){
-            if(apr[got]){
-                return true;
-            }
-            apr[got] = true, got.clear();
-        }
-        else{
-            got += now;
-        }
-    }
-    if(apr[got]){
-        return true;
-    }
-    return false;
 }
 
 std::string remove_pre_suf(std::string str, Infotype type){
@@ -370,7 +373,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             }
             if(can[3]){
                 //std::cout << "show by keyword" << std::endl;
-                if(!single_keyword(remove_pre_suf(info[1])))return false;
+                if(!single_keyword(remove_pre_suf(info[1], Keyword)))return false;
                 return book.show(turn(), turn(), turn(), turn(remove_pre_suf(info[1], Keyword)), account);
             }
             return false;
@@ -419,9 +422,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 if(gkeyword){
                     return false;
                 }
-                if(duplicated_keyword(remove_pre_suf(info[wc], Keyword))){
-                    return false;
-                }
+                
                 keyword = remove_pre_suf(info[wc], Keyword), gkeyword = true;
             }
             if(pre_suf_valid(info[wc], Price)){
