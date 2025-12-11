@@ -41,7 +41,7 @@ bool Checker::valid(std::string str, Infotype type){
             return false;
         }
         for(char now : str){
-            if(isblank(now)){
+            if(isspace(now)){
                 return false;
             }
         }
@@ -52,7 +52,7 @@ bool Checker::valid(std::string str, Infotype type){
             return false;
         }
         for(char now : str){
-            if(isblank(now)){
+            if(isspace(now)){
                 return false;
             }
         }
@@ -63,7 +63,7 @@ bool Checker::valid(std::string str, Infotype type){
             return false;
         }
         for(char now : str){
-            if(isblank(now) || now == '\"'){
+            if(isspace(now) || now == '\"'){
                 return false;
             }
         }
@@ -74,7 +74,7 @@ bool Checker::valid(std::string str, Infotype type){
             return false;
         }
         for(char now : str){
-            if(isblank(now) || now == '\"'){
+            if(isspace(now) || now == '\"'){
                 return false;
             }
         }
