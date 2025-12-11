@@ -223,7 +223,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
     }
     std::string fir = *info.begin();
     int size = info.size();
-    std::cout << "fir = " << fir << std::endl;
+    //std::cout << "fir = " << fir << std::endl;
     if(fir == "quit" || fir == "exit"){
         if(size != 1){
             return false;
