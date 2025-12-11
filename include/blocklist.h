@@ -319,6 +319,10 @@ public:
 
     ~BlockList(){
         list.file.seekp(0, ios::beg);
+            //std::cerr << "program end" << std::endl;
+            //std::cout << "size = " << size << std::endl;
+            //std::cout << "head = " << head << std::endl;
+            //std::cout << "number = " << number << std::endl;
         list.file.write(reinterpret_cast<char*>(&size), sizeof(int));
         list.file.write(reinterpret_cast<char*>(&head), sizeof(int));
         list.file.write(reinterpret_cast<char*>(&number), sizeof(int));
@@ -340,6 +344,10 @@ public:
             list.file.read(reinterpret_cast<char*>(&size), sizeof(int));
             list.file.read(reinterpret_cast<char*>(&head), sizeof(int));
             list.file.read(reinterpret_cast<char*>(&number), sizeof(int));
+            //std::cerr << "continued" << std::endl;
+            //std::cout << "size = " << size << std::endl;
+            //std::cout << "head = " << head << std::endl;
+            //std::cout << "number = " << number << std::endl;
         }
         //std::cout << "sizeofT = " << sizeof(T) << std::endl;
         return;
@@ -438,7 +446,7 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
                             head = list.get_info(Knext, now);
                         }
                         else{
-                            head = 0;
+                            head = leftmemory;
                         }
                     }
                     else{
