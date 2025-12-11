@@ -218,12 +218,14 @@ bool Checker::pre_suf_valid(std::string str, Infotype type){
 }
 
 bool Checker::operate(std::vector<std::string> info, AccountSystem &account, BookSystem &book, LogSystem &log, Interactor &interactor){
+    static int counter = 0;
+    counter++;
     if(info.empty()){
-        return false;
+        return true;
     }
     std::string fir = *info.begin();
     int size = info.size();
-    //std::cout << "fir = " << fir << std::endl;
+    //std::cout << "counter = " << counter << ",fir = " << fir << std::endl;
     if(fir == "quit" || fir == "exit"){
         if(size != 1){
             return false;
@@ -293,10 +295,10 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 return false;
             }
             if(size == 2){
-                return log.show(-1);
+                return log.show(-1, account);
             }
             if(!valid(info[2], Count))return false;
-            return log.show(std::stoi(info[2]));
+            return log.show(std::stoi(info[2]), account);
         }
         else{
             if(size != 2){

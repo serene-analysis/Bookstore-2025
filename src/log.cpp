@@ -21,7 +21,8 @@ void LogSystem::move(double v, bool incomed){
     return;
 }
 
-bool LogSystem::show(int count){
+bool LogSystem::show(int count, AccountSystem &account){
+    if(account.currentPrivilege() < 7)return false;
     if(count == 0){
         std::cout << std::endl;
         return true;

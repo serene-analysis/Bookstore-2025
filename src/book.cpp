@@ -62,9 +62,6 @@ bool BookSystem::show(String isbn, String bookname, String author, String keywor
     else{
         got = isbn_.all();
     }
-
-    //out(given);
-
     for(Tbook now : got){
         double price;
         long long quantity;// A problem here
@@ -131,8 +128,8 @@ void BookSystem::insert(Tbook arr){
     String isbn, bookname, author, keyword;
     double price;
     long long quantity;
-    std::vector<String> fkeyword = split(keyword);
     std::tie(isbn, bookname, author, keyword, price, quantity) = arr.second;
+    std::vector<String> fkeyword = split(keyword);
     Tbook gisbn = std::make_pair(isbn, arr.second),
         gbookname = std::make_pair(bookname, arr.second),
         gauthor = std::make_pair(author, arr.second);

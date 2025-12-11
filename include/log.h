@@ -1,6 +1,7 @@
 #pragma once
 
 #include "blocklist.h"
+#include "account.h"
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -21,8 +22,8 @@ struct LogSystem{
     }
     ~LogSystem() = default;
     void move(double, bool);
-    bool show(int);
-    bool report_finance();
-    bool report_employee();
-    bool log();
+    bool show(int, AccountSystem &);
+    bool report_finance(AccountSystem &);
+    bool report_employee(AccountSystem &);
+    bool log(AccountSystem &);
 };
