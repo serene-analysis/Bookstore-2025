@@ -66,8 +66,9 @@ bool BookSystem::show(String isbn, String bookname, String author, String keywor
         long long price;
         long long quantity;// A problem here
         std::tie(isbn, bookname, author, keyword, price, quantity) = now.second;
+        std::cout << price << std::endl;
         std::cout << turnback(isbn) << '\t' << turnback(bookname) << '\t' << turnback(author) << '\t' <<
-            turnback(keyword) << '\t' << (long double)(price + 1e-2) / 100.0 << '\t' << quantity << std::endl;
+            turnback(keyword) << '\t' << (long double)(price) / 100.0 + 1e-2 << '\t' << quantity << std::endl;
     }
     if(got.empty()){
         std::cout << std::endl;
@@ -154,7 +155,7 @@ bool BookSystem::buy(String isbn, long long quantity, AccountSystem &account, Lo
     if(arr.first != given.first)return false;
     if(std::get<5>(arr.second) < quantity)return false;
     long long cost = std::get<4>(arr.second) * quantity;
-    std::cout << (long double)(cost + 1e-2) / 100.0 << std::endl;
+    std::cout << (long double)(cost) / 100.0 + 1e-2 << std::endl;
     std::get<5>(arr.second) -= quantity;
     log.move(cost, true);
     change(mem, arr);
