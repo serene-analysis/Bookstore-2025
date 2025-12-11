@@ -19,6 +19,31 @@ bool is_invisible(char c) {
     return uc <= 31 || uc == 127;
 }
 
+long long getInt(std::string str){
+    long long ret = 0;
+    bool doted = false;
+    int counter = 0;
+    for(char now : str){
+        if(now != '.'){
+            ret = ret * 10 + now - '0';
+            if(doted){
+                counter++;
+            }
+        }
+        else{
+            doted = true;
+        }
+    }
+    if(counter == 0){
+        ret *= 100;
+    }
+    if(counter == 1){
+        ret *= 10;
+    }
+    //std::cerr << "ret = " << ret << std::endl;
+    return ret;
+}
+
 bool Checker::valid(std::string str, Infotype type){
     if(type == UserID || type == Password || type == CurrentPassword || type == NewPassword){
         if(str.length() > 30){
@@ -110,6 +135,9 @@ bool Checker::valid(std::string str, Infotype type){
                 return false;
             }
         }
+        if(getInt(str) >= 2147483647){
+            return false;
+        }
         return true;
     }
     if(type == Price || type == TotalCost){
@@ -131,6 +159,9 @@ bool Checker::valid(std::string str, Infotype type){
             if(!isdigit(now)){
                 return false;
             }
+        }
+        if(getInt(str) >= 2147483647){
+            return false;
         }
         return true;
     }
@@ -186,31 +217,6 @@ std::string remove_pre_suf(std::string str, Infotype type){
     }
     throw -1;
     return "";
-}
-
-long long getInt(std::string str){
-    long long ret = 0;
-    bool doted = false;
-    int counter = 0;
-    for(char now : str){
-        if(now != '.'){
-            ret = ret * 10 + now - '0';
-            if(doted){
-                counter++;
-            }
-        }
-        else{
-            doted = true;
-        }
-    }
-    if(counter == 0){
-        ret *= 100;
-    }
-    if(counter == 1){
-        ret *= 10;
-    }
-    //std::cerr << "ret = " << ret << std::endl;
-    return ret;
 }
 
 bool Checker::pre_suf_valid(std::string str, Infotype type){
