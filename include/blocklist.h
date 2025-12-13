@@ -616,14 +616,4 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
         return;
     }
 
-    void renew(T &value){
-        T found = findSimilar(value);
-        if(found != T()){
-            modify(found, value);
-        }
-        else{
-            insert(value);
-        }
-        return;
-    }
 };

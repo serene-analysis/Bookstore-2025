@@ -91,7 +91,6 @@ bool AccountSystem::logout(){
     Taccount now = currentAccount();
         //std::cout << "stack.size() = " << stack_.getnumber() << ", map.size() = " << map_.getnumber() << std::endl;
     if(std::get<1>(now.second) < 1)return false;
-    if(now.first == turn("serene_analysis"))return false;
     Tstackaccount slast = stack_.findLast();
     Tmap nmap = std::make_pair(std::get<0>(slast.second), 0),
         found = map_.findSimilar(nmap);
@@ -139,7 +138,7 @@ bool AccountSystem::passwd(String userid, String currentPassword, String newPass
 bool AccountSystem::useradd(String userid, String password, long long privilege, String username){
     //std::cout << "useradd" << std::endl;
     //    std::cout << "stack.size() = " << stack_.getnumber() << ", map.size() = " << map_.getnumber() << std::endl;
-    if(privilege != 0 && privilege != 1 && privilege != 3 && privilege != 7)return false;
+    if(/*privilege != 0 &&*/ privilege != 1 && privilege != 3 && privilege != 7)return false;
     Taccount given = Taccount();
     given.first = userid;
     Taccount now = currentAccount(), want = account_.findSimilar(given), arr = given;

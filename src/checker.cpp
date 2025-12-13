@@ -202,13 +202,7 @@ bool Checker::valid(std::string str, Infotype type){
                 if(doted)return false;
                 doted = true;
             }
-            else{
-                if(doted){
-                    counter++;
-                }
-            }
         }
-        if(counter >= 3)return false;
         return true;
     }
     throw false;
@@ -289,7 +283,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
     }
     std::string fir = *info.begin();
     int size = info.size();
-    //std::cout << "counter = " << counter << ",fir = " << fir << std::endl;
+    std::cout << "counter = " << counter << ",fir = " << fir << std::endl;
     if(fir == "quit" || fir == "exit"){
         if(size != 1){
             return false;
