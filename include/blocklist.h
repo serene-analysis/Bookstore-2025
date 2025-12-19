@@ -447,6 +447,7 @@ std::cout << "full, after:(block = " << block << ")" << std::endl;
                         }
                         else{
                             head = leftmemory;
+                            size = 1;
                         }
                     }
                     else{

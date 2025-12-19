@@ -192,7 +192,6 @@ bool Checker::valid(std::string str, Infotype type){
                 if(str[1] != '.')return false;
             }
         }
-        int counter = 0;
         bool doted = false;
         for(char now : str){
             if(!(isdigit(now) || now == '.')){
