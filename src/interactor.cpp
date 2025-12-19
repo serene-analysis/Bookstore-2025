@@ -41,6 +41,11 @@ void Interactor::tian(AccountSystem &account, BookSystem &book, LogSystem &log, 
     while(!end_){
         auto got = readLine();
         if(end_){
+            if(!got.empty()){
+                if(!checker.operate(got, account, book, log, *this)){
+                    std::cout << "Invalid" << std::endl;
+                }
+            }
             return;
         }
         if(got.empty()){
