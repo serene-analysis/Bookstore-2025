@@ -287,6 +287,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
         if(size != 1){
             return false;
         }
+        interactor.end_ = true;
         return account.exit();// always return true
     }
     if(fir == "su"){
