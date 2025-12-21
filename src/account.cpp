@@ -46,9 +46,19 @@ int AccountSystem::currentPrivilege(){
     return std::get<1>(now.second);
 }
 
+String AccountSystem::currentUserID(){
+    Taccount now = currentAccount();
+    return now.first;
+}
+
 Tselected AccountSystem::currentBook(){
     Taccount now = currentAccount();
     return std::get<3>(now.second);
+}
+
+String AccountSystem::currentISBN(){
+    Tselected now = currentBook();
+    return now.first;
 }
 
 bool AccountSystem::exit(){
@@ -59,7 +69,7 @@ bool AccountSystem::exit(){
     return true;
 }
 
-bool AccountSystem::su(String userid, String password){
+bool AccountSystem::su(String userid, String password, LogSystem &log){
     //std::cout << "su, userid = " << turnback(userid) << ", password = " << turnback(password) << std::endl;
     //    std::cout << "stack.size() = " << stack_.getnumber() << ", map.size() = " << map_.getnumber() << std::endl;
     Taccount given = Taccount();
@@ -72,6 +82,7 @@ bool AccountSystem::su(String userid, String password){
     }
     if(password != String()){
         if(std::get<0>(want.second) != password)return false;
+        log.log_move_user(std::make_tuple(currentUserID(), turn("su"), currentPrivilege(), userid, String(), password, -1, String()));
         //std::cout << "su success" << std::endl;
         Tstackaccount ins = std::make_pair(stack_.getnumber() + 1, want);
         //out(ins.second);
@@ -80,6 +91,7 @@ bool AccountSystem::su(String userid, String password){
         return true;
     }
     if(std::get<1>(want.second) >= std::get<1>(now.second))return false;
+    log.log_move_user(std::make_tuple(currentUserID(), turn("su"), currentPrivilege(), userid, String(), password, -1, String()));
     Tstackaccount ins = std::make_pair(stack_.getnumber() + 1, want);
     Tmap nmap = std::make_pair(userid, stack_.getnumber() + 1);
     stack_.insert(ins), map_.insert(nmap);
@@ -87,10 +99,11 @@ bool AccountSystem::su(String userid, String password){
 }
 
 
-bool AccountSystem::logout(){
+bool AccountSystem::logout(LogSystem &log){
     Taccount now = currentAccount();
         //std::cout << "stack.size() = " << stack_.getnumber() << ", map.size() = " << map_.getnumber() << std::endl;
     if(std::get<1>(now.second) < 1)return false;
+    log.log_move_user(std::make_tuple(currentUserID(), turn("logout"), currentPrivilege(), String(), String(), String(), -1, String()));
     Tstackaccount slast = stack_.findLast();
     Tmap nmap = std::make_pair(std::get<0>(slast.second), 0),
         found = map_.findSimilar(nmap);
@@ -99,7 +112,7 @@ bool AccountSystem::logout(){
     return true;
 }
 
-bool AccountSystem::signup(String userid, String password, String username, bool forced){
+bool AccountSystem::signup(String userid, String password, String username, bool forced, LogSystem &log){
     //std::cout << "signup" << std::endl;
         //std::cout << "stack.size() = " << stack_.getnumber() << ", map.size() = " << map_.getnumber() << std::endl;
     if(forced){// root
@@ -112,12 +125,13 @@ bool AccountSystem::signup(String userid, String password, String username, bool
     given.first = userid;
     Taccount now = currentAccount(), want = account_.findSimilar(given);
     if(want.first == userid)return false;
+    log.log_move_user(std::make_tuple(currentUserID(), turn("signup"), currentPrivilege(), userid, String(), password, -1, username));
     Taccount ins = std::make_pair(userid, std::make_tuple(password, 1, username, Tselected()));
     account_.insert(ins);
     return true;
 }
 
-bool AccountSystem::passwd(String userid, String currentPassword, String newPassword){
+bool AccountSystem::passwd(String userid, String currentPassword, String newPassword, LogSystem &log){
     Taccount given = Taccount();
     given.first = userid;
     Taccount now = currentAccount(), want = account_.findSimilar(given), arr = want;
@@ -125,17 +139,19 @@ bool AccountSystem::passwd(String userid, String currentPassword, String newPass
     if(want.first != userid)return false;
     if(currentPassword != String()){
         if(std::get<0>(want.second) != currentPassword)return false;
+        log.log_move_user(std::make_tuple(currentUserID(), turn("passwd"), currentPrivilege(), userid, String(), newPassword, -1, String()));
         std::get<0>(arr.second) = newPassword;
         account_.modify(want, arr);
         return true;
     }
     if(std::get<1>(now.second) != 7)return false;
+    log.log_move_user(std::make_tuple(currentUserID(), turn("passwd"), currentPrivilege(), userid, currentPassword, newPassword, -1, String()));
     std::get<0>(arr.second) = newPassword;
     account_.modify(want, arr);
     return true;
 }
 
-bool AccountSystem::useradd(String userid, String password, long long privilege, String username){
+bool AccountSystem::useradd(String userid, String password, long long privilege, String username, LogSystem &log){
     //std::cout << "useradd" << std::endl;
     //    std::cout << "stack.size() = " << stack_.getnumber() << ", map.size() = " << map_.getnumber() << std::endl;
     if(/*privilege != 0 &&*/ privilege != 1 && privilege != 3 && privilege != 7)return false;
@@ -149,11 +165,12 @@ bool AccountSystem::useradd(String userid, String password, long long privilege,
     if(std::get<1>(now.second) < 3)return false;
     if(want.first == userid)return false;
     if(privilege >= std::get<1>(now.second))return false;
+    log.log_move_user(std::make_tuple(currentUserID(), turn("useradd"), currentPrivilege(), userid, String(), password, privilege, username));
     account_.insert(arr);
     return true;
 }
 
-bool AccountSystem::remove(String userid){
+bool AccountSystem::remove(String userid, LogSystem &log){
         //std::cout << "stack.size() = " << stack_.getnumber() << ", map.size() = " << map_.getnumber() << std::endl;
     Taccount given = Taccount();
     given.first = userid;
@@ -162,6 +179,7 @@ bool AccountSystem::remove(String userid){
     if(want.first != userid)return false;
     Tmap nmap = std::make_pair(userid, 0);
     if(map_.findSimilar(nmap) != Tmap())return false;
+    log.log_move_user(std::make_tuple(currentUserID(), turn("remove"), currentPrivilege(), userid, String(), String(), -1, String()));
     account_.remove(want);
     return true;
 }

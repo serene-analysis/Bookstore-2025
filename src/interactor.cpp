@@ -35,7 +35,7 @@ void Interactor::tian(AccountSystem &account, BookSystem &book, LogSystem &log, 
     std::cout << std::fixed << std::setprecision(2);
     if(account.account_.number == 0){
         //std::cout << "create root" << std::endl;
-        assert(account.signup(turn("root"), turn("sjtu"), turn("root"), true));
+        assert(account.signup(turn("root"), turn("sjtu"), turn("root"), true, log));
     }
     //std::cout << "ok!" << std::endl;
     while(!end_){

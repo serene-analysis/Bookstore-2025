@@ -13,6 +13,8 @@ using Taccount = std::pair<String,std::tuple<String, int, String, Tselected > >;
 using Tstackaccount = std::pair<int, Taccount>;
 using Tmap = std::pair<String, int>;
 
+struct LogSystem;
+
 struct AccountSystem{
     BlockList<Taccount> account_;
     BlockList<Tstackaccount> stack_;
@@ -29,14 +31,16 @@ struct AccountSystem{
     }
     Taccount currentAccount();
     int currentPrivilege();
+    String currentUserID();
     Tselected currentBook();
+    String currentISBN();
     bool exit();
-    bool su(String, String);
-    bool logout();
-    bool signup(String, String, String, bool);
-    bool passwd(String, String, String);
-    bool useradd(String, String, long long, String);
-    bool remove(String);
+    bool su(String, String, LogSystem &);
+    bool logout(LogSystem &);
+    bool signup(String, String, String, bool, LogSystem &);
+    bool passwd(String, String, String, LogSystem &);
+    bool useradd(String, String, long long, String, LogSystem &);
+    bool remove(String, LogSystem &);
     bool select(Tselected);
     bool changeBook(Tselected, Tselected);
 };

@@ -14,8 +14,8 @@
 using String = std::array<char,61>;
 using Tbook = std::pair<String, std::tuple<String, String, String, String, long long, long long > >;
 
-std::string turnback(String);
 std::vector<String> split(std::array<char, 61>);
+std::string turnback(String arr);
 struct BookSystem{
     BlockList<Tbook> isbn_, bookname_, author_, keyword_;
     BookSystem(){
@@ -28,9 +28,9 @@ struct BookSystem{
     ~BookSystem() = default;
     void change(Tbook, Tbook);
     void insert(Tbook);
-    bool show(String, String, String, String, AccountSystem &);
+    bool show(String, String, String, String, AccountSystem &, LogSystem &);
     bool buy(String, long long, AccountSystem &, LogSystem &);
-    bool select(String, AccountSystem &);
-    bool modify(String, String, String, String, long long, AccountSystem &);
+    bool select(String, AccountSystem &, LogSystem &);
+    bool modify(String, String, String, String, long long, AccountSystem &, LogSystem &);
     bool import(long long, long long, AccountSystem &, LogSystem &);
 };

@@ -296,25 +296,25 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
         }
         if(!valid(info[1], UserID))return false;
         if(size == 2){
-            return account.su(turn(info[1]), turn());
+            return account.su(turn(info[1]), turn(), log);
         }
         else{
             if(!valid(info[2], Password))return false;
-            return account.su(turn(info[1]), turn(info[2]));
+            return account.su(turn(info[1]), turn(info[2]), log);
         }
     }
     if(fir == "logout"){
         if(size != 1){
             return false;
         }
-        return account.logout();
+        return account.logout(log);
     }
     if(fir == "register"){
         if(size != 4){
             return false;
         }
         if(!valid(info[1], UserID) || !valid(info[2], Password) || !valid(info[3], Username))return false;
-        return account.signup(turn(info[1]), turn(info[2]), turn(info[3]), false);
+        return account.signup(turn(info[1]), turn(info[2]), turn(info[3]), false, log);
     }
     if(fir == "passwd"){
         if(size != 3 && size != 4){
@@ -322,11 +322,11 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
         }
         if(size == 3){
             if(!valid(info[1], UserID) || !valid(info[2], NewPassword))return false;
-            return account.passwd(turn(info[1]), turn(), turn(info[2]));
+            return account.passwd(turn(info[1]), turn(), turn(info[2]), log);
         }
         else{
             if(!valid(info[1], UserID) || !valid(info[2], CurrentPassword) || !valid(info[3], Password))return false;
-            return account.passwd(turn(info[1]), turn(info[2]), turn(info[3]));
+            return account.passwd(turn(info[1]), turn(info[2]), turn(info[3]), log);
         }
     }
     if(fir == "useradd"){
@@ -334,18 +334,18 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             return false;
         }
         if(!valid(info[1], UserID) || !valid(info[2], Password) || !valid(info[3], Privilege) || !valid(info[4], Username))return false;
-        return account.useradd(turn(info[1]), turn(info[2]), getUltimateInt(info[3]), turn(info[4]));
+        return account.useradd(turn(info[1]), turn(info[2]), getUltimateInt(info[3]), turn(info[4]), log);
     }
     if(fir == "delete"){
         if(size != 2){
             return false;
         }
         if(!valid(info[1], UserID))return false;
-        return account.remove(turn(info[1]));
+        return account.remove(turn(info[1]), log);
     }
     if(fir == "show"){
         if(size == 1){
-            return book.show(turn(), turn(), turn(), turn(), account);
+            return book.show(turn(), turn(), turn(), turn(), account, log);
         }
         if(info[1] == "finance"){
             if(size >= 4){
@@ -364,20 +364,20 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             bool can[4] = {pre_suf_valid(info[1], ISBN), pre_suf_valid(info[1], BookName), pre_suf_valid(info[1], Author), pre_suf_valid(info[1], Keyword)};
             if(can[0]){
                 //std::cout << "show by ISBN" << std::endl;
-                return book.show(turn(remove_pre_suf(info[1], ISBN)), turn(), turn(), turn(), account);
+                return book.show(turn(remove_pre_suf(info[1], ISBN)), turn(), turn(), turn(), account, log);
             }
             if(can[1]){
                 //std::cout << "show by bookname" << std::endl;
-                return book.show(turn(), turn(remove_pre_suf(info[1], BookName)), turn(), turn(), account);
+                return book.show(turn(), turn(remove_pre_suf(info[1], BookName)), turn(), turn(), account, log);
             }
             if(can[2]){
                 //std::cout << "show by author" << std::endl;
-                return book.show(turn(), turn(), turn(remove_pre_suf(info[1], Author)), turn(), account);
+                return book.show(turn(), turn(), turn(remove_pre_suf(info[1], Author)), turn(), account, log);
             }
             if(can[3]){
                 //std::cout << "show by keyword" << std::endl;
                 if(!single_keyword(remove_pre_suf(info[1], Keyword)))return false;
-                return book.show(turn(), turn(), turn(), turn(remove_pre_suf(info[1], Keyword)), account);
+                return book.show(turn(), turn(), turn(), turn(remove_pre_suf(info[1], Keyword)), account, log);
             }
             return false;
         }
@@ -394,7 +394,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
             return false;
         }
         if(!valid(info[1], ISBN))return false;
-        return book.select(turn(info[1]), account);
+        return book.select(turn(info[1]), account, log);
     }
     if(fir == "modify"){
         if(size == 1){
@@ -437,7 +437,7 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
                 return false;
             }
         }
-        return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), gprice ? getInt(price) : -1, account);
+        return book.modify(turn(isbn), turn(bookname), turn(author), turn(keyword), gprice ? getInt(price) : -1, account, log);
     }
     if(fir == "import"){
         if(size != 3){
@@ -445,6 +445,26 @@ bool Checker::operate(std::vector<std::string> info, AccountSystem &account, Boo
         }
         if(!valid(info[1], Quantity) || !valid(info[2], TotalCost))return false;
         return book.import(getUltimateInt(info[1]), getInt(info[2]), account, log);
+    }
+    if(fir == "report"){
+        if(size != 2){
+            return false;
+        }
+        if(info[1] == "finance"){
+            return log.report_finance(account);
+        }
+        else if(info[1] == "employee"){
+            return log.report_employee(account, 3);
+        }
+        else{
+            return false;
+        }
+    }
+    if(fir == "log"){
+        if(size != 1){
+            return false;
+        }
+        return log.log(account);
     }
     return false;
 }

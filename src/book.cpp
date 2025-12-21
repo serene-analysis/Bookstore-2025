@@ -5,6 +5,7 @@
 #include <tuple>
 /*
 using Tbook = std::pair<String, std::tuple<String, String, String, String, long long, long long > >;
+using Tfinanceinfo = std::tuple<String, String, String, long long, long long>;
 */
 
 std::string turnback(String arr){
@@ -50,7 +51,7 @@ std::string getString(long long v){
     return ret;
 }
 
-bool BookSystem::show(String isbn, String bookname, String author, String keyword, AccountSystem &account){
+bool BookSystem::show(String isbn, String bookname, String author, String keyword, AccountSystem &account, LogSystem &log){
     //std::cout << "show book" << std::endl;
     Tbook given = Tbook();
     std::vector<Tbook> got;
@@ -95,6 +96,7 @@ bool BookSystem::show(String isbn, String bookname, String author, String keywor
     if(got.empty()){
         std::cout << std::endl;
     }
+    log.log_move_book(std::make_tuple(account.currentUserID(), turn("show"), account.currentPrivilege(), isbn, bookname, author, keyword, -1));
     return true;
 }
 
@@ -181,10 +183,11 @@ bool BookSystem::buy(String isbn, long long quantity, AccountSystem &account, Lo
     std::get<5>(arr.second) -= quantity;
     log.move(cost, true);
     change(mem, arr);
+    log.log_move_finance(std::make_tuple(account.currentUserID(), turn("buy"), isbn, quantity, -1ll));
     return account.changeBook(mem, arr);
 }
 
-bool BookSystem::select(String isbn, AccountSystem &account){
+bool BookSystem::select(String isbn, AccountSystem &account, LogSystem &log){
     //std::cout << "select, book.number = " << isbn_.getnumber() << std::endl;
     if(account.currentPrivilege() < 3)return false;
     Tbook given = Tbook();
@@ -195,11 +198,12 @@ bool BookSystem::select(String isbn, AccountSystem &account){
         insert(given);
         got = given;
     }
+    log.log_move_book(std::make_tuple(account.currentUserID(), turn("select"), account.currentPrivilege(), isbn, String(), String(), String(), -1));
     return account.select(got);
 }
 
 bool BookSystem::modify(String isbn, String bookname, String author,
-    String keyword, long long price, AccountSystem &account){
+    String keyword, long long price, AccountSystem &account, LogSystem &log){
         //std::cout << "modify, book.number = " << isbn_.getnumber() << std::endl;
         //std::cout << "privilege = " << account.currentPrivilege() << std::endl;
         if(account.currentPrivilege() < 3)return false;
@@ -226,6 +230,7 @@ bool BookSystem::modify(String isbn, String bookname, String author,
             std::get<4>(arr.second) = price;
         }
         change(now, arr);
+        log.log_move_book(std::make_tuple(account.currentUserID(), turn("show"), account.currentPrivilege(), isbn, bookname, author, keyword, price));
         return account.changeBook(now, arr);
     }
 
@@ -237,5 +242,6 @@ bool BookSystem::import(long long quantity, long long totalcost, AccountSystem &
     std::get<5>(arr.second) += quantity;
     log.move(totalcost, false);
     change(now, arr);
+    log.log_move_finance(std::make_tuple(account.currentUserID(), turn("import"), account.currentISBN(), quantity, totalcost));
     return account.changeBook(now, arr);
 }
